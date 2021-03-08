@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/ShowTitles/index.dart';
 import 'package:mangadex/components/latestUpdates/index.dart';
+import 'package:mangadex/components/readingHistory/index.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -8,9 +10,7 @@ class HomeScreen extends StatelessWidget {
       body: Container(
         child: SingleChildScrollView(
           child: Column(
-            children: [
-              LatestuUpdates(),
-            ],
+            children: [LatestuUpdates(), ReadingHistory(), ShowTitles()],
           ),
         ),
       ),

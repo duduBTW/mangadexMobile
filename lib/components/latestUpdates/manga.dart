@@ -14,6 +14,7 @@ class MangaMainItem extends StatelessWidget {
               Container(
                 width: 65,
                 decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage("teste1MangaCover.jpg"))),

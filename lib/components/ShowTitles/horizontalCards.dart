@@ -58,6 +58,7 @@ class CardManga extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,
         child: InkWell(
+          borderRadius: BorderRadius.circular(10),
           onTap: () {},
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

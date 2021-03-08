@@ -32,6 +32,12 @@ ThemeData getTheme(TextTheme textTheme) {
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),
+      headline4: GoogleFonts.rubik(
+        textStyle: textTheme.headline4,
+        color: Colors.white,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
       bodyText1: GoogleFonts.roboto(
         // textStyle: textTheme.bodyText1,
         color: Colors.white,
@@ -42,6 +48,11 @@ ThemeData getTheme(TextTheme textTheme) {
         color: Colors.white,
         fontSize: 12,
         fontWeight: FontWeight.w500,
+      ),
+      subtitle2: GoogleFonts.roboto(
+        color: Colors.white,
+        fontSize: 8,
+        fontWeight: FontWeight.w400,
       ),
     ),
   );
