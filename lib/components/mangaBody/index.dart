@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mangadex/components/mangaHeader/RowInfo.dart';
 import 'package:mangadex/components/tabs/index.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -143,17 +144,45 @@ class MangaBody extends StatelessWidget {
         ),
         Expanded(
           child: ListView.separated(
+              physics: BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               itemBuilder: (ctx, index) {
                 return Container(
-                  child: ListTile(
-                    onLongPress: () => _open(context),
-                    title: Text(
-                      "sa",
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    subtitle: Text(
-                      "acascas",
-                      style: Theme.of(context).textTheme.bodyText2,
+                  child: Slidable(
+                    actions: [
+                      IconSlideAction(
+                        color: Theme.of(context).primaryColor,
+                        caption: "Readed",
+                        // icon: Icons.remove_red_eye,
+                        iconWidget: Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.white,
+                        ),
+                      ),
+                      IconSlideAction(
+                        color: Theme.of(context).primaryColor,
+                        caption: "Comments",
+                        // icon: Icons.remove_red_eye,
+                        iconWidget: Icon(
+                          Icons.comment,
+                          color: Colors.white,
+                        ),
+                        onTap: () =>
+                            Navigator.of(context).pushNamed("/comments"),
+                      )
+                    ],
+                    actionPane: SlidableScrollActionPane(),
+                    child: ListTile(
+                      onLongPress: () => _open(context),
+                      onTap: () => Navigator.of(context).pushNamed("/title/12"),
+                      title: Text(
+                        "Ch. 141",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      subtitle: Text(
+                        "White Cat Scanlations",
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
                     ),
                   ),
                 );

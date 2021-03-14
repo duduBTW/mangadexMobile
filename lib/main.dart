@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/comments.dart';
 import 'package:mangadex/pages/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangadex/pages/manga.dart';
+import 'package:mangadex/pages/readTitle.dart';
 
 ThemeData getTheme(TextTheme textTheme) {
   return ThemeData(
@@ -75,6 +77,8 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
       routes: {
         '/title': (ctx) => MangaPage(),
+        '/comments': (ctx) => CommentsPage(),
+        '/title/12': (ctx) => ReadTitle(),
       },
     );
   }

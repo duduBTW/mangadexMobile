@@ -9,6 +9,8 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: SingleChildScrollView(
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           child: Column(
             children: [LatestuUpdates(), ReadingHistory(), ShowTitles()],
           ),
