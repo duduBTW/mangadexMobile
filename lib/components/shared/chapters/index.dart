@@ -27,6 +27,30 @@ class Chapters extends StatelessWidget {
           ),
           ChapManga(),
           SizedBox(
+            height: 15,
+          ),
+          ChapManga(),
+          SizedBox(
+            height: 15,
+          ),
+          ChapManga(),
+          SizedBox(
+            height: 15,
+          ),
+          ChapManga(),
+          SizedBox(
+            height: 15,
+          ),
+          ChapManga(),
+          SizedBox(
+            height: 15,
+          ),
+          ChapManga(),
+          SizedBox(
+            height: 15,
+          ),
+          ChapManga(),
+          SizedBox(
             height: 30,
           ),
         ],
@@ -46,8 +70,26 @@ class ChapManga extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Title"),
-          Text("16 hrs"),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Title",
+                style: Theme.of(context).textTheme.headline3,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                "Scan Grup Name",
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          Text(
+            "16 hrs",
+            style: TextStyle(fontSize: 12),
+          ),
         ],
       ),
     );

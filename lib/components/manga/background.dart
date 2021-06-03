@@ -48,15 +48,15 @@ class BackgroundGradientManga extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 160,
       decoration: BoxDecoration(
           gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        stops: [0.1, 0.9],
+        stops: [0, 0.4, 0.9],
         colors: [
-          Colors.white.withOpacity(0.5),
+          Colors.white.withOpacity(0.75),
           Colors.white,
+          Theme.of(context).accentColor
         ],
       )),
     );
