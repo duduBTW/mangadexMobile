@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mangadex/pages/author/index.dart';
 import 'package:mangadex/pages/home/index.dart';
 import 'package:mangadex/pages/manga/index.dart';
+import 'package:mangadex/pages/mangaList/index.dart';
 
 ThemeData getTheme(TextTheme textTheme) {
   return ThemeData(
@@ -56,8 +58,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: getTheme(textTheme),
-      home: MangaPage(),
-      routes: {},
+      home: AuthorPage(),
+      routes: {
+        '/manga/list': (ctx) => MangaList(),
+      },
     );
   }
 }
