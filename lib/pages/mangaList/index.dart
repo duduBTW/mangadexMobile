@@ -16,15 +16,6 @@ class MangaList extends StatelessWidget {
             style: Theme.of(context).textTheme.headline3,
           ),
           backgroundColor: Colors.white,
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.favorite_border_rounded,
-                color: Theme.of(context).accentColor,
-              ),
-              onPressed: () {},
-            )
-          ],
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(

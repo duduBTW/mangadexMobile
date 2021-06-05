@@ -9,16 +9,17 @@ class ButtonAction extends StatefulWidget {
 }
 
 class _ButtonActionState extends State<ButtonAction> {
+  static const double radius = 15;
   bool active = false;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(radius),
       color: Colors.white,
       child: InkWell(
         splashColor: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(radius),
         onTap: () {
           setState(() {
             active = !active;
@@ -34,7 +35,7 @@ class _ButtonActionState extends State<ButtonAction> {
                       colors: [Color(0xffE866A7), Color(0xffFF7D7D)],
                     )
                   : null,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(radius),
               border: Border.all(
                   color: Theme.of(context).primaryColor.withOpacity(0.5))),
           width: 60,

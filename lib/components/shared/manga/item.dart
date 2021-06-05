@@ -46,7 +46,7 @@ class MangaMainItem extends StatelessWidget {
                                 Text(
                                   "Chapter 32",
                                   style: GoogleFonts.roboto(
-                                      color: Colors.black, fontSize: 12),
+                                      color: Colors.black, fontSize: 14),
                                 ),
                                 // Image.network(
                                 //   "",
