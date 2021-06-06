@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/shared/actions/button.dart';
 
 class HeaderManga extends StatelessWidget {
   @override
@@ -35,31 +36,11 @@ class HeaderManga extends StatelessWidget {
                 SizedBox(
                   height: 60,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  width: 60,
-                  height: 60,
-                  child: Icon(
-                    Icons.favorite_border_rounded,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
+                ButtonAction(Icons.favorite),
                 SizedBox(
                   height: 30,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  width: 60,
-                  height: 60,
-                  child: Icon(
-                    Icons.mode_comment_outlined,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
+                ButtonAction(Icons.star)
               ],
             ),
           )),
@@ -67,8 +48,9 @@ class HeaderManga extends StatelessWidget {
             width: 30,
           ),
           Container(
-            height: 320,
             width: 226,
+            constraints:
+                BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
             margin: const EdgeInsets.only(right: 30),
             decoration: BoxDecoration(
                 boxShadow: [

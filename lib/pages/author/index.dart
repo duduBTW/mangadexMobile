@@ -52,6 +52,6 @@ class AuthorPage extends StatelessWidget {
             MangasAuthor()
           ],
         ),
-        "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg");
+        "https://pbs.twimg.com/media/E0nea50VgAAB2d_?format=jpg&name=medium");
   }
 }

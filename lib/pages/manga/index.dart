@@ -65,7 +65,7 @@ class _MangaPageState extends State<MangaPage> {
             children: [
               Positioned(
                 child: BackgroundImageManga(
-                    "https://images.catmanga.org/series/tawawa/chapters/1/007.png"),
+                    "https://images.catmanga.org/series/tawawa/covers/01.jpeg"),
                 top: 0,
                 left: 0,
                 right: 0,
