@@ -26,10 +26,12 @@ class LoginPage extends StatelessWidget {
       contentPadding: const EdgeInsets.only(left: 30, bottom: 10, top: 10),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.transparent)),
+          borderSide: BorderSide(
+              color: Theme.of(context).primaryColor.withOpacity(0.5))),
       enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.transparent)),
+          borderSide: BorderSide(
+              color: Theme.of(context).primaryColor.withOpacity(0.5))),
       errorBorder: InputBorder.none,
       disabledBorder: InputBorder.none,
     );
@@ -60,7 +62,7 @@ class LoginPage extends StatelessWidget {
                     Spacer(),
                     Text("Username"),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     TextFormField(
                       cursorColor: Colors.black,
@@ -72,7 +74,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     Text("Passworld"),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     TextFormField(
                       cursorColor: Colors.black,
@@ -83,18 +85,18 @@ class LoginPage extends StatelessWidget {
                     Spacer(),
                     Button(),
                     Spacer(),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(bottom: 60, top: 30),
-                      child: Text(
-                        "Forgot your passworld?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
+                    // Container(
+                    //   width: double.infinity,
+                    //   padding: const EdgeInsets.only(bottom: 60, top: 30),
+                    //   child: Text(
+                    //     "Forgot your passworld?",
+                    //     textAlign: TextAlign.center,
+                    //     style: TextStyle(
+                    //         color: Theme.of(context).primaryColor,
+                    //         letterSpacing: 1,
+                    //         fontWeight: FontWeight.w700),
+                    //   ),
+                    // ),
                   ],
                 )),
           ),

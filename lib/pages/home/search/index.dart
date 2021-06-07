@@ -130,139 +130,141 @@ class _SearchTabState extends State<SearchTab> {
                         ),
                       ],
                     )),
-              ],
-            )
-          else
-            Column(
-              children: [
-                Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      elevation: 0,
-                      child: InkWell(
-                        borderRadius:
-                            BorderRadius.circular(30), // if you need this
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(30),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.plagiarism_outlined,
-                                size: 32,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                "Advanced Manga Search",
-                                style: Theme.of(context).textTheme.headline1,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )),
                 SizedBox(
-                  height: 30,
-                ),
-                Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      elevation: 0,
-                      child: InkWell(
-                        borderRadius:
-                            BorderRadius.circular(30), // if you need this
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(30),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.person_search_sharp,
-                                size: 32,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                "Advanced Author Search",
-                                style: Theme.of(context).textTheme.headline1,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      elevation: 0,
-                      child: InkWell(
-                        borderRadius:
-                            BorderRadius.circular(30), // if you need this
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(30),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.group_sharp,
-                                size: 32,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                "Advanced Scan Search",
-                                style: Theme.of(context).textTheme.headline1,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )),
-                SizedBox(
-                  height: 30,
+                  height: 15,
                 ),
               ],
             ),
+          Column(
+            children: [
+              Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    elevation: 0,
+                    child: InkWell(
+                      borderRadius:
+                          BorderRadius.circular(30), // if you need this
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.plagiarism_outlined,
+                              size: 32,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              "Advanced Manga Search",
+                              style: Theme.of(context).textTheme.headline1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    elevation: 0,
+                    child: InkWell(
+                      borderRadius:
+                          BorderRadius.circular(30), // if you need this
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.person_search_sharp,
+                              size: 32,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              "Advanced Author Search",
+                              style: Theme.of(context).textTheme.headline1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    elevation: 0,
+                    child: InkWell(
+                      borderRadius:
+                          BorderRadius.circular(30), // if you need this
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.group_sharp,
+                              size: 32,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              "Advanced Scan Search",
+                              style: Theme.of(context).textTheme.headline1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
+              SizedBox(
+                height: 30,
+              ),
+            ],
+          ),
         ]),
       ),
     );

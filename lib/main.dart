@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: getTheme(textTheme),
-      home: AuthorPage(),
+      home: HomePage(),
       routes: {
         '/manga/list': (ctx) => MangaList(),
         '/search': (ctx) => SearchPage(),
