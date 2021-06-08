@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/shared/actions/submit.dart';
-import 'package:mangadex/services/http.dart';
+import 'package:mangadex/utils/http.dart';
+import 'package:mangadex/utils/login/index.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  final Function? onLoginSuccess;
+  LoginPage({Key? key, this.onLoginSuccess}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -29,12 +31,23 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       http.post("/auth/login", {"username": "", "password": ""}).then(
-          (response) {
+          (response) async {
         print(response.data.toString());
         if (response.statusCode == 200) {
           //Success
+          http.setAuth(response.data['token']['session']);
+          if (widget.onLoginSuccess != null) {
+            widget.onLoginSuccess!();
+          }
+
+          await LoginController.setToken(response.data['token']['session'],
+              response.data['token']['refresh'])();
         }
 
+        setState(() {
+          loading = false;
+        });
+      }).catchError((err) {
         setState(() {
           loading = false;
         });
