@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
         loading = true;
       });
 
-      http.post("/auth/login", {"username": "a", "password": "a"}).then(
+      http.post("/auth/login", {"username": "", "password": ""}).then(
           (response) {
         print(response.data.toString());
         if (response.statusCode == 200) {
