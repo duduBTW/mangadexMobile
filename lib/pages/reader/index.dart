@@ -42,15 +42,9 @@ class _MangaReaderState extends State<MangaReader> {
     }
   }
 
+  /// Did Change Dependencies
   @override
-  void initState() {
-    super.initState();
-
-    _pageController.addListener(onPageChange);
-    load();
-  }
-
-  void load() {
+  void didChangeDependencies() {
     try {
       for (var page in _images) {
         precacheImage(new NetworkImage(page), context);
@@ -58,6 +52,14 @@ class _MangaReaderState extends State<MangaReader> {
     } catch (e) {
       print(e);
     }
+    super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController.addListener(onPageChange);
   }
 
   @override
@@ -99,6 +101,18 @@ class _MangaReaderState extends State<MangaReader> {
     );
   }
 
+  void _handleTapDown(TapUpDetails details) {
+    if (details.globalPosition.dx < MediaQuery.of(context).size.width / 2) {
+      setState(() {
+        currentPage = currentPage - 1;
+      });
+    } else {
+      setState(() {
+        currentPage = currentPage + 1;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -130,16 +144,18 @@ class _MangaReaderState extends State<MangaReader> {
               //         ],
               //       ),
               //     )),
-
-              InteractiveViewer(
-                transformationController: _transformationController,
-                minScale: 1,
-                maxScale: 3,
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.white,
-                  child: Image.network(_images[currentPage]),
-                  alignment: Alignment(0, 0),
+              GestureDetector(
+                onTapUp: _handleTapDown,
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  minScale: 1,
+                  maxScale: 3,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    color: Colors.white,
+                    child: Image.network(_images[currentPage]),
+                    alignment: Alignment(0, 0),
+                  ),
                 ),
               ),
               AnimatedPositioned(
@@ -153,7 +169,7 @@ class _MangaReaderState extends State<MangaReader> {
                     margin: EdgeInsets.all(10),
                     padding: EdgeInsets.symmetric(horizontal: 30),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).accentColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(30)),
                     alignment: Alignment(0, 0),
                     child: Row(
@@ -176,39 +192,34 @@ class _MangaReaderState extends State<MangaReader> {
               AnimatedPositioned(
                 duration: Duration(milliseconds: 200),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                  // padding: EdgeInsets.symmetric(vertical: 20),
                   color: Colors.white.withOpacity(0.8),
+                  // height: 80,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () {
+                      IconButton(
+                        onPressed: () {
                           reset();
                           setState(() {
                             currentPage = currentPage - 1;
                           });
                         },
-                        child: Icon(
+                        icon: Icon(
                           Icons.arrow_back_ios,
                           size: 12,
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
                       Text("${currentPage + 1}/${_images.length}"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
+                      IconButton(
+                        onPressed: () {
                           reset();
                           setState(() {
                             currentPage = currentPage + 1;
                           });
                         },
-                        child: Icon(
+                        icon: Icon(
                           Icons.arrow_forward_ios,
                           size: 12,
                         ),

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: getTheme(textTheme),
-        home: HomePage(),
+        home: MangaReader(),
         routes: {
           '/manga/list': (ctx) => MangaList(),
           '/search': (ctx) => SearchPage(),
