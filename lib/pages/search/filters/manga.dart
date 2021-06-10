@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mangadex/pages/home/search/index.dart';
+import 'package:mangadex/components/home/search/index.dart';
 
 class MangaFilters extends StatelessWidget {
   const MangaFilters({Key? key}) : super(key: key);
