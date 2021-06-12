@@ -180,7 +180,7 @@ class _MangaReaderState extends State<MangaReader> {
                             Icons.arrow_back,
                             color: Color(0xff3F0000),
                           ),
-                          onPressed: () {},
+                          onPressed: () => Navigator.of(context).pop(),
                         ),
                         Text(
                           "Getsuyoubi no Tawawa (Blue)",

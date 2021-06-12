@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/shared/manga/index.dart';
 import 'package:mangadex/components/shared/manga/item.dart';
 
 class Follows extends StatelessWidget {
@@ -22,29 +23,28 @@ class Follows extends StatelessWidget {
           ),
           body: TabBarView(children: [
             SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        MangaShow(),
                         SizedBox(
                           height: 30,
                         ),
-                        MangaMainItem(),
+                        MangaShow(),
                         SizedBox(
                           height: 30,
                         ),
-                        MangaMainItem(),
+                        MangaShow(),
                         SizedBox(
                           height: 30,
                         ),
-                        MangaMainItem(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        MangaMainItem(),
+                        MangaShow(),
                         SizedBox(
                           height: 30,
                         ),

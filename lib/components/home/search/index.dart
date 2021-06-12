@@ -19,6 +19,8 @@ class _SearchTabState extends State<SearchTab> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       // padding: const EdgeInsets.all(30),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       child: SafeArea(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SearchInput(onChange),

@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           '/manga/list': (ctx) => MangaList(),
           '/search': (ctx) => SearchPage(),
           '/search/filters/manga': (ctx) => MangaFilters(),
+          '/reader': (ctx) => MangaReader(),
         },
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/shared/manga/index.dart';
 import 'package:mangadex/components/shared/manga/item.dart';
 
 import 'horizontalCards/index.dart';
@@ -60,8 +61,6 @@ class Landing extends StatelessWidget {
               Hero(
                 tag: "manga-list",
                 child: Container(
-                  padding: EdgeInsets.all(30),
-                  margin: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -77,24 +76,25 @@ class Landing extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Latest Updated",
-                        style: Theme.of(context).textTheme.headline3,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 30, left: 30, right: 30, bottom: 15),
+                        child: Text(
+                          "Latest Updated",
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
                       ),
+                      MangaShow(),
                       SizedBox(
                         height: 30,
                       ),
-                      MangaMainItem(),
+                      MangaShow(),
                       SizedBox(
                         height: 30,
                       ),
-                      MangaMainItem(),
+                      MangaShow(),
                       SizedBox(
-                        height: 30,
-                      ),
-                      MangaMainItem(),
-                      SizedBox(
-                        height: 30,
+                        height: 15,
                       ),
                       Container(
                         width: double.infinity,
@@ -105,6 +105,9 @@ class Landing extends StatelessWidget {
                           ),
                           onPressed: () => {},
                         ),
+                      ),
+                      SizedBox(
+                        height: 15,
                       ),
                     ],
                   ),
@@ -114,10 +117,8 @@ class Landing extends StatelessWidget {
                 height: 30,
               ),
               Hero(
-                tag: "a-list",
+                tag: "manga-list",
                 child: Container(
-                  padding: EdgeInsets.all(30),
-                  margin: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -133,24 +134,25 @@ class Landing extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Recently Added",
-                        style: Theme.of(context).textTheme.headline3,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 30, left: 30, right: 30, bottom: 15),
+                        child: Text(
+                          "Latest Updated",
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
                       ),
+                      MangaShow(),
                       SizedBox(
                         height: 30,
                       ),
-                      MangaMainItem(),
+                      MangaShow(),
                       SizedBox(
                         height: 30,
                       ),
-                      MangaMainItem(),
+                      MangaShow(),
                       SizedBox(
-                        height: 30,
-                      ),
-                      MangaMainItem(),
-                      SizedBox(
-                        height: 30,
+                        height: 15,
                       ),
                       Container(
                         width: double.infinity,
@@ -161,6 +163,9 @@ class Landing extends StatelessWidget {
                           ),
                           onPressed: () => {},
                         ),
+                      ),
+                      SizedBox(
+                        height: 15,
                       ),
                     ],
                   ),
