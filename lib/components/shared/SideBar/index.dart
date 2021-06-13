@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/service/http.dart';
+import 'package:mangadex/service/login/index.dart';
+import 'package:provider/provider.dart';
 
 class SideBar extends StatelessWidget {
-  const SideBar({Key? key}) : super(key: key);
+  SideBar({Key? key}) : super(key: key);
+  final MangadexService http = new MangadexService();
+
+  void logOut(BuildContext ctx) async {
+    Navigator.of(ctx).pop();
+    // await LoginController.removeToken();
+
+    Provider.of<LoginController>(ctx, listen: false).logOut().then((_) {
+      final snackBar = SnackBar(content: Text('Logged out!'));
+
+      ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +90,7 @@ class SideBar extends StatelessWidget {
                   Icons.logout,
                   color: Theme.of(context).primaryColor,
                 ),
-                onPressed: () {},
+                onPressed: () => logOut(context),
                 label: Text(
                   "Log Out",
                   style: Theme.of(context).textTheme.headline3,

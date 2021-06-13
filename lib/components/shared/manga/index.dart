@@ -32,14 +32,14 @@ class MangaShow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       clipBehavior: Clip.antiAlias,
                       child: Image.network(
-                        "https://uploads.mangadex.org/covers/5e3a710f-0b0d-482b-9e84-d9c91960c625/15646c6d-bde5-4b4a-8944-8149ef82c223.jpg.512.jpg",
+                        "https://pbs.twimg.com/media/E3q4ZCmUYAcnv_6?format=jpg&name=large",
                         width: 125,
                       )),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 15),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Column(
                             children: [
@@ -118,11 +118,16 @@ class MangaShow extends StatelessWidget {
                               ),
                             ],
                           ),
+                          SizedBox(
+                            height: 15,
+                          ),
                           Text(
                             "A salary man is quite depressed, especially on Mondays. At his lowest point a well-endowed High-School girl calling herself Ai-chan stumbles breast-first into his face. The concussion she gave him served as the start of their relationship.",
-                            maxLines: 4,
+                            maxLines: 5,
                             overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 14),
                           ),
+                          Spacer(),
                           Row(
                             children: [
                               Row(

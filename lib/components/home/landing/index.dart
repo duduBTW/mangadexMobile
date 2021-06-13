@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/home/landing/recentlyAdded/index.dart';
 import 'package:mangadex/components/shared/manga/index.dart';
-import 'package:mangadex/components/shared/manga/item.dart';
+import 'package:mangadex/service/manga/index.dart';
+import 'package:provider/provider.dart';
 
-import 'horizontalCards/index.dart';
+class Landing extends StatefulWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey;
 
-class Landing extends StatelessWidget {
-  const Landing({Key? key}) : super(key: key);
+  const Landing(this._scaffoldKey);
+
+  @override
+  _LandingState createState() => _LandingState();
+}
+
+class _LandingState extends State<Landing> {
+  @override
+  void initState() {
+    super.initState();
+
+    print("Build");
+
+    Provider.of<MangaController>(context, listen: false).getRecentMangas();
+    // UserController.getUserFollowedMangas(30, 0)
+    //     .then((response) => print(response.data));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +38,7 @@ class Landing extends StatelessWidget {
           title: Row(
             children: [
               GestureDetector(
-                // onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                onTap: () => widget._scaffoldKey.currentState?.openDrawer(),
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(
                       "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg"),
@@ -41,20 +59,7 @@ class Landing extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Text(
-                  "Featured",
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: CardListHorizontal(),
-              ),
+              RecentlyAdded(),
               SizedBox(
                 height: 30,
               ),

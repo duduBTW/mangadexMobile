@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchTab extends StatefulWidget {
-  const SearchTab({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey;
+  const SearchTab(this._scaffoldKey);
 
   @override
   _SearchTabState createState() => _SearchTabState();
@@ -23,7 +24,23 @@ class _SearchTabState extends State<SearchTab> {
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       child: SafeArea(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SearchInput(onChange),
+          Row(
+            children: [
+              SizedBox(
+                width: 30,
+              ),
+              GestureDetector(
+                onTap: () => widget._scaffoldKey.currentState?.openDrawer(),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg"),
+                  backgroundColor: Colors.transparent,
+                  radius: 15.0,
+                ),
+              ),
+              Expanded(child: SearchInput(onChange)),
+            ],
+          ),
           if (searchValue.isNotEmpty)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,16 +334,18 @@ class _SearchInputState extends State<SearchInput> {
           filled: true,
           fillColor: Theme.of(context).accentColor,
           hintText: 'Manga name, author or scan',
+          contentPadding: const EdgeInsets.only(left: 30, bottom: 10, top: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          contentPadding: const EdgeInsets.only(left: 30, bottom: 10, top: 10),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.transparent)),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor.withOpacity(0.4))),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.transparent)),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor.withOpacity(0.4))),
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
         ),
