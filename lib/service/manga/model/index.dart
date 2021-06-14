@@ -38,7 +38,7 @@ class MangaDataAttributesModel {
   final Map<String, String> title;
   final List<Map<String, String>> altTitles;
   final Map<String, String> description;
-  final bool isLocked;
+  final bool? isLocked;
   final Map<String, String>? links;
   final String originalLanguage;
   final String? lastVolume;

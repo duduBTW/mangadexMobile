@@ -47,7 +47,7 @@ MangaDataAttributesModel _$MangaDataAttributesModelFromJson(
         .map((e) => Map<String, String>.from(e as Map))
         .toList(),
     Map<String, String>.from(json['description'] as Map),
-    json['isLocked'] as bool,
+    json['isLocked'] as bool?,
     (json['links'] as Map<String, dynamic>?)?.map(
       (k, e) => MapEntry(k, e as String),
     ),

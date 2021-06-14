@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/shared/actions/button.dart';
+import 'package:mangadex/service/manga/model/index.dart';
 
 class HeaderManga extends StatelessWidget {
+  final MangaModel manga;
+
+  const HeaderManga({Key? key, required this.manga}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -15,23 +20,26 @@ class HeaderManga extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "Back",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16),
-                    )
-                  ],
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_back,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Back",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 60,
@@ -40,7 +48,7 @@ class HeaderManga extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                ButtonAction(Icons.star)
+                ButtonAction(Icons.more_horiz)
               ],
             ),
           )),
@@ -67,8 +75,7 @@ class HeaderManga extends StatelessWidget {
                 image: DecorationImage(
                     fit: BoxFit.fitWidth,
                     alignment: Alignment(0, -1),
-                    image: NetworkImage(
-                        "https://images.catmanga.org/series/tawawa/covers/01.jpeg"))),
+                    image: NetworkImage(manga.data.coverLink))),
           ),
         ],
       ),

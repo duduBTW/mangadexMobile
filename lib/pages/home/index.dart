@@ -53,7 +53,9 @@ class _HomePageState extends State<HomePage> {
       Landing(_scaffoldKey),
       SearchTab(_scaffoldKey),
       Provider.of<LoginController>(context).loggedIn
-          ? Follows()
+          ? Follows(
+              scaffoldKey: _scaffoldKey,
+            )
           : LoginPage(
               onLoginSuccess: onLoginSuccess,
             )
@@ -154,6 +156,8 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Theme.of(context).backgroundColor,
               selectedItemColor: Theme.of(context).primaryColor,
               onTap: _onItemTapped,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
             ),
           ],
         ),

@@ -89,15 +89,15 @@ class _LandingState extends State<Landing> {
                           style: Theme.of(context).textTheme.headline1,
                         ),
                       ),
-                      MangaShow(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      MangaShow(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      MangaShow(),
+                      // MangaShow(),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      // MangaShow(),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      // MangaShow(),
                       SizedBox(
                         height: 15,
                       ),
@@ -147,15 +147,15 @@ class _LandingState extends State<Landing> {
                           style: Theme.of(context).textTheme.headline1,
                         ),
                       ),
-                      MangaShow(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      MangaShow(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      MangaShow(),
+                      // MangaShow(),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      // MangaShow(),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      // MangaShow(),
                       SizedBox(
                         height: 15,
                       ),

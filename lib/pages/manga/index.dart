@@ -3,8 +3,14 @@ import 'package:mangadex/components/manga/background.dart';
 import 'package:mangadex/components/manga/header.dart';
 import 'package:mangadex/components/manga/info.dart';
 import 'package:mangadex/components/shared/chapters/index.dart';
+import 'package:mangadex/service/manga/model/index.dart';
 
 class MangaPage extends StatefulWidget {
+  static const routeName = '/manga/item';
+  final MangaModel manga;
+
+  const MangaPage({Key? key, required this.manga}) : super(key: key);
+
   @override
   _MangaPageState createState() => _MangaPageState();
 }
@@ -40,13 +46,15 @@ class _MangaPageState extends State<MangaPage> {
 
   @override
   Widget build(BuildContext context) {
+    var manga = widget.manga;
+
     return Scaffold(
         appBar: _showNav
             ? AppBar(
                 elevation: 0,
                 backgroundColor: Theme.of(context).accentColor,
                 title: Text(
-                  "Getsuyoubi no Tawawa (Blue)",
+                  manga.data.attributes.title['en']!,
                   style: Theme.of(context).textTheme.headline3,
                 ),
                 actions: [
@@ -64,8 +72,7 @@ class _MangaPageState extends State<MangaPage> {
           child: Stack(
             children: [
               Positioned(
-                child: BackgroundImageManga(
-                    "https://images.catmanga.org/series/tawawa/covers/01.jpeg"),
+                child: BackgroundImageManga(manga.data.coverLink),
                 top: 0,
                 left: 0,
                 right: 0,
@@ -103,8 +110,12 @@ class _MangaPageState extends State<MangaPage> {
                         SizedBox(
                           height: 60,
                         ),
-                        HeaderManga(),
-                        MangaInfo(),
+                        HeaderManga(
+                          manga: manga,
+                        ),
+                        MangaInfo(
+                          manga: manga,
+                        ),
                         Chapters()
                       ],
                     ),

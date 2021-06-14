@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:mangadex/pages/manga/index.dart';
+import 'package:mangadex/service/manga/model/index.dart';
 
 class MangaShow extends StatelessWidget {
-  const MangaShow({Key? key}) : super(key: key);
+  final MangaModel manga;
+  const MangaShow(this.manga, {Key? key}) : super(key: key);
+
+  void _redirectToManga(context) {
+    Navigator.of(context).pushNamed(MangaPage.routeName, arguments: manga);
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed("/reader"),
+      onTap: () => _redirectToManga(context),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).accentColor.withOpacity(0.3),
           borderRadius: BorderRadius.circular(30),
         ),
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        margin: EdgeInsets.only(bottom: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Getsuyoubi no Tawawa (Blue)",
+              manga.data.attributes.title['en']!,
               style: Theme.of(context).textTheme.headline3,
             ),
             SizedBox(
@@ -32,8 +40,13 @@ class MangaShow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       clipBehavior: Clip.antiAlias,
                       child: Image.network(
-                        "https://pbs.twimg.com/media/E3q4ZCmUYAcnv_6?format=jpg&name=large",
+                        manga.data.coverLink == "" ||
+                                manga.data.coverLink == null
+                            ? "https://placewaifu.com/image/200/300"
+                            : manga.data.coverLink,
+                        fit: BoxFit.cover,
                         width: 125,
+                        height: 200,
                       )),
                   Expanded(
                     child: Padding(
@@ -45,76 +58,7 @@ class MangaShow extends StatelessWidget {
                             children: [
                               Container(
                                 height: 22,
-                                child: ListView(
-                                  physics: const BouncingScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 3, horizontal: 15),
-                                      child: Text("Tag 1",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 12)),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.5))),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 3, horizontal: 15),
-                                      child: Text("Tag 2",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 12)),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.5))),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 3, horizontal: 15),
-                                      child: Text("Tag 3",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 12)),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.5))),
-                                    ),
-                                  ],
-                                ),
+                                child: MangaTags(manga: manga),
                               ),
                             ],
                           ),
@@ -122,10 +66,10 @@ class MangaShow extends StatelessWidget {
                             height: 15,
                           ),
                           Text(
-                            "A salary man is quite depressed, especially on Mondays. At his lowest point a well-endowed High-School girl calling herself Ai-chan stumbles breast-first into his face. The concussion she gave him served as the start of their relationship.",
+                            manga.data.attributes.description['en']!,
                             maxLines: 5,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 14, height: 1.25),
                           ),
                           Spacer(),
                           Row(
@@ -142,7 +86,7 @@ class MangaShow extends StatelessWidget {
                                   SizedBox(
                                     width: 5,
                                   ),
-                                  Text("22"),
+                                  Text("N\A"),
                                 ],
                               ),
                               Spacer(),
@@ -158,7 +102,7 @@ class MangaShow extends StatelessWidget {
                                   SizedBox(
                                     width: 5,
                                   ),
-                                  Text("22"),
+                                  Text("N\A"),
                                 ],
                               ),
                               Spacer()
@@ -186,7 +130,7 @@ class MangaShow extends StatelessWidget {
                   ),
                   width: 125,
                   child: Text(
-                    "Ongoing",
+                    manga.data.attributes.status!,
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1,
@@ -210,7 +154,7 @@ class MangaShow extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text("22"),
+                            Text("N\A"),
                           ],
                         ),
                         Spacer(),
@@ -227,7 +171,7 @@ class MangaShow extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              "22",
+                              "N\A",
                             ),
                           ],
                         ),
@@ -240,6 +184,44 @@ class MangaShow extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MangaTags extends StatelessWidget {
+  const MangaTags({
+    Key? key,
+    required this.manga,
+  }) : super(key: key);
+
+  final MangaModel manga;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: manga.data.attributes.tags.length,
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (ctx, index) {
+        return Container(
+            padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+            child: Text(
+                manga.data.attributes.tags[index]['attributes']['name']['en'],
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                    fontSize: 12)),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                    color: Theme.of(context).primaryColor.withOpacity(0.5))));
+      },
+      separatorBuilder: (ctx, index) => SizedBox(
+        width: 5,
       ),
     );
   }
