@@ -73,7 +73,7 @@ class HeaderManga extends StatelessWidget {
                     topLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15)),
                 image: DecorationImage(
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.cover,
                     alignment: Alignment(0, -1),
                     image: NetworkImage(manga.data.coverLink))),
           ),

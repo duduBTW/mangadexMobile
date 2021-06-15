@@ -66,4 +66,19 @@ class CoverControllerHelper {
 
     return covers;
   }
+
+  static Future<List<CoverModel>> getMangaCoversData(
+      MangadexService http, String id) async {
+    String link = "cover?manga[]=$id&limit=100&order[volume]=asc";
+
+    var response = await http.get(link);
+
+    List<CoverModel> covers = [];
+
+    for (dynamic coverItemApi in response.data['results']) {
+      covers.add(CoverModel.fromJson(coverItemApi));
+    }
+
+    return covers;
+  }
 }

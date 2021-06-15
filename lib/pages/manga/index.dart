@@ -3,13 +3,18 @@ import 'package:mangadex/components/manga/background.dart';
 import 'package:mangadex/components/manga/header.dart';
 import 'package:mangadex/components/manga/info.dart';
 import 'package:mangadex/components/shared/chapters/index.dart';
+import 'package:mangadex/service/http.dart';
+import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
+import 'package:provider/provider.dart';
 
 class MangaPage extends StatefulWidget {
   static const routeName = '/manga/item';
   final MangaModel manga;
+  final MangadexService http;
 
-  const MangaPage({Key? key, required this.manga}) : super(key: key);
+  const MangaPage({Key? key, required this.manga, required this.http})
+      : super(key: key);
 
   @override
   _MangaPageState createState() => _MangaPageState();
@@ -24,6 +29,8 @@ class _MangaPageState extends State<MangaPage> {
     super.initState();
 
     _controller.addListener(onScroll);
+    Provider.of<MangaItemController>(context, listen: false).manga =
+        widget.manga;
   }
 
   void onScroll() {
@@ -49,81 +56,81 @@ class _MangaPageState extends State<MangaPage> {
     var manga = widget.manga;
 
     return Scaffold(
-        appBar: _showNav
-            ? AppBar(
-                elevation: 0,
-                backgroundColor: Theme.of(context).accentColor,
-                title: Text(
-                  manga.data.attributes.title['en']!,
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.favorite_border_rounded,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              )
-            : null,
-        body: SafeArea(
+      appBar: _showNav
+          ? AppBar(
+              elevation: 0,
+              backgroundColor: Theme.of(context).accentColor,
+              title: Text(
+                manga.data.attributes.title['en']!,
+                style: Theme.of(context).textTheme.headline3,
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.favorite_border_rounded,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {},
+                )
+              ],
+            )
+          : null,
+      body: SafeArea(
           child: Stack(
-            children: [
-              Positioned(
-                child: BackgroundImageManga(manga.data.coverLink),
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              ),
-              Positioned(
-                child: BackgroundGradientManga(),
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              ),
-              SingleChildScrollView(
-                controller: _controller,
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                child: Stack(
+        children: [
+          Positioned(
+            child: BackgroundImageManga(manga.data.coverLink),
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          ),
+          Positioned(
+            child: BackgroundGradientManga(),
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          ),
+          SingleChildScrollView(
+            controller: _controller,
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            child: Stack(
+              children: [
+                Positioned(
+                  child: BackgroundManga(Theme.of(context).primaryColor),
+                  top: 141,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                ),
+                Positioned(
+                  child: BackgroundManga(Theme.of(context).accentColor),
+                  top: 145,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                ),
+                Column(
                   children: [
-                    Positioned(
-                      child: BackgroundManga(Theme.of(context).primaryColor),
-                      top: 141,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
+                    SizedBox(
+                      height: 60,
                     ),
-                    Positioned(
-                      child: BackgroundManga(Theme.of(context).accentColor),
-                      top: 145,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
+                    HeaderManga(
+                      manga: manga,
                     ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 60,
-                        ),
-                        HeaderManga(
-                          manga: manga,
-                        ),
-                        MangaInfo(
-                          manga: manga,
-                        ),
-                        Chapters()
-                      ],
+                    MangaInfo(
+                      manga: manga,
                     ),
+                    Chapters()
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ));
+        ],
+      )),
+    );
   }
 }

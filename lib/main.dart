@@ -7,6 +7,7 @@ import 'package:mangadex/pages/search/filters/manga.dart';
 import 'package:mangadex/pages/search/index.dart';
 import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/login/index.dart';
+import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:mangadex/service/theme.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<LoginController>(
             create: (_) => LoginController(http)),
+        ChangeNotifierProvider<MangaItemController>(
+            create: (_) => MangaItemController(http)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -51,7 +54,10 @@ class MyApp extends StatelessWidget {
             // correct screen.
             return MaterialPageRoute(
               builder: (context) {
-                return MangaPage(manga: manga);
+                return MangaPage(
+                  manga: manga,
+                  http: http,
+                );
               },
             );
           }
