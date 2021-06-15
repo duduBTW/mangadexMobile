@@ -8,7 +8,8 @@ class SearchTab extends StatefulWidget {
   _SearchTabState createState() => _SearchTabState();
 }
 
-class _SearchTabState extends State<SearchTab> {
+class _SearchTabState extends State<SearchTab>
+    with AutomaticKeepAliveClientMixin<SearchTab> {
   String searchValue = "";
   void onChange(newValue) {
     setState(() {
@@ -18,6 +19,8 @@ class _SearchTabState extends State<SearchTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return SingleChildScrollView(
       // padding: const EdgeInsets.all(30),
       physics:
@@ -286,6 +289,9 @@ class _SearchTabState extends State<SearchTab> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class SearchInput extends StatefulWidget {

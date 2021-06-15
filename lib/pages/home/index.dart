@@ -22,11 +22,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  PageController _pageController = PageController();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
+    _pageController.jumpToPage(index);
   }
 
   void redirectMangaAll(BuildContext ctx) {
@@ -71,7 +74,14 @@ class _HomePageState extends State<HomePage> {
               "https://i.pinimg.com/originals/50/77/04/50770411adf0bd85919b46a54b6be20d.jpg"),
         ),
         backgroundColor: Theme.of(context).backgroundColor,
-        body: pages[_selectedIndex],
+        // body: pages[_selectedIndex],
+        body: PageView(
+          controller: _pageController,
+          children: pages,
+          onPageChanged: _onItemTapped,
+          physics: NeverScrollableScrollPhysics(),
+          // child: _childern[_currentIndex],
+        ),
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

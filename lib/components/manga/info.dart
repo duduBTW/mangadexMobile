@@ -181,6 +181,21 @@ class _MangaArtsState extends State<MangaArts> {
               itemCount: _covers.length,
               itemBuilder: (ctx, i) => Stack(
                 children: [
+                  Positioned(
+                      bottom: 0,
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      child: Center(
+                        child: SizedBox(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                            strokeWidth: 2,
+                          ),
+                          width: 32,
+                          height: 32,
+                        ),
+                      )),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -220,6 +235,7 @@ class _MangaArtsState extends State<MangaArts> {
                           ),
                         ),
                       )),
+
                   Positioned(
                     child: Text(
                       "Vol. ${_covers[i].data.attributes.volume ?? "Actual"}",

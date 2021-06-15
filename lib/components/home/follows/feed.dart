@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mangadex/components/shared/manga/index.dart';
-import 'package:mangadex/service/manga/index.dart';
-import 'package:provider/provider.dart';
+
+import 'mangas.dart';
 
 class Follows extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -11,16 +10,17 @@ class Follows extends StatefulWidget {
   _FollowsState createState() => _FollowsState();
 }
 
-class _FollowsState extends State<Follows> {
+class _FollowsState extends State<Follows>
+    with AutomaticKeepAliveClientMixin<Follows> {
   @override
   void initState() {
     super.initState();
-    Provider.of<MangaController>(context, listen: false).getUserMangas();
+    // Provider.of<MangaController>(context, listen: false).getUserMangas();
   }
 
   @override
   Widget build(BuildContext context) {
-    var mangas = Provider.of<MangaController>(context).userMangas;
+    super.build(context);
 
     return DefaultTabController(
       length: 2,
@@ -60,22 +60,12 @@ class _FollowsState extends State<Follows> {
               ],
             ),
           ),
-          body: TabBarView(children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              // padding: const EdgeInsets.symmetric(vertical: 30),
-              child: ListView.builder(
-                // shrinkWrap: true,
-                itemCount: mangas?.length != null ? mangas!.length : 0,
-                itemBuilder: (ctx, index) => MangaShow(mangas![index]),
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-              ),
-            ),
-            Container()
-          ]),
+          body: TabBarView(children: [FollowsMangas(), Container()]),
         ),
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
