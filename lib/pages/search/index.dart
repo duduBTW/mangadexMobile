@@ -9,26 +9,18 @@ class SearchPage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            "Search",
-            style: Theme.of(context).textTheme.headline3,
-          ),
-          backgroundColor: Colors.white,
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                text: "Manga",
-              ),
-              Tab(
-                text: "Author",
-              ),
-              Tab(
-                text: "Scan",
-              ),
-            ],
-          ),
+        appBar: TabBar(
+          tabs: [
+            Tab(
+              text: "Manga",
+            ),
+            Tab(
+              text: "Author",
+            ),
+            Tab(
+              text: "Scan",
+            ),
+          ],
         ),
         body: TabBarView(
           children: [

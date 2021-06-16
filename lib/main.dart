@@ -9,6 +9,7 @@ import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/login/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
+import 'package:mangadex/service/manga/user.dart';
 import 'package:mangadex/service/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<LoginController>(
             create: (_) => LoginController(http)),
+        ChangeNotifierProvider<UserMangaController>(
+            create: (_) => UserMangaController(http)),
         ChangeNotifierProvider<MangaItemController>(
             create: (_) => MangaItemController(http)),
       ],
@@ -61,13 +64,6 @@ class MyApp extends StatelessWidget {
               },
             );
           }
-          // The code only supports
-          // PassArgumentsScreen.routeName right now.
-          // Other values need to be implemented if we
-          // add them. The assertion here will help remind
-          // us of that higher up in the call stack, since
-          // this assertion would otherwise fire somewhere
-          // in the framework.
           assert(false, 'Need to implement ${settings.name}');
           return null;
         },

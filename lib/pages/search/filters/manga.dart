@@ -9,7 +9,7 @@ class MangaFilters extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          SearchInput(() => {}),
+          SearchInput(() => {}, () => {}),
         ],
       ),
     );

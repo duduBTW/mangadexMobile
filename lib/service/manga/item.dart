@@ -26,8 +26,4 @@ class MangaItemController with ChangeNotifier {
       notifyListeners();
     }
   }
-  // set recentCovers(List<CoverModel>? recentCovers) {
-  //   _covers = recentCovers;
-  //   notifyListeners();
-  // }
 }
