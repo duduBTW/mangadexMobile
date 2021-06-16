@@ -17,8 +17,7 @@ class MangaController with ChangeNotifier {
 
   Future<PaginationModel> getRecentMangas() async {
     // _recentMangas = await MangaControllerHelper.getRecentMangasData(http)..item1;
-    var recentMangaResult =
-        await MangaControllerHelper.getRecentMangasData(http);
+    var recentMangaResult = await MangaControllerHelper.getMangasData(http);
     _recentMangas = recentMangaResult.item1;
     notifyListeners();
 
@@ -27,9 +26,13 @@ class MangaController with ChangeNotifier {
 }
 
 class MangaControllerHelper {
-  static Future<Tuple<List<MangaModel>, PaginationModel>> getRecentMangasData(
-      MangadexService http) async {
-    var response = await http.get("/manga?limit=20&order[createdAt]=desc");
+  static Future<Tuple<List<MangaModel>, PaginationModel>> getMangasData(
+      MangadexService http,
+      {String limit = "20",
+      String? title,
+      String order = "[createdAt]=desc"}) async {
+    var response = await http.get(
+        "/manga?limit=$limit&order$order${title != null ? "&title=$title" : ""}");
 
     print(response.data['results']!
         .map((mangaItemApi) => MangaModel.fromJson(mangaItemApi))

@@ -5,7 +5,7 @@ part 'index.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class CoverModel {
-  final String result;
+  final String? result;
   final DataModel data;
   final List<RelationshipsModel> relationships;
 

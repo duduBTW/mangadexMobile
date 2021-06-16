@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/home/search/type/index.dart';
 import 'package:mangadex/pages/search/index.dart';
+import 'package:mangadex/service/manga/search.dart';
+import 'package:provider/provider.dart';
 
 class SearchTab extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
@@ -24,6 +26,8 @@ class _SearchTabState extends State<SearchTab>
     setState(() {
       showSearch = false;
     });
+
+    Provider.of<SearchController>(context, listen: false).title = searchValue;
   }
 
   @override
@@ -117,14 +121,14 @@ class _SearchInputState extends State<SearchInput> {
           hintText: 'Manga name, author or scan',
           contentPadding: const EdgeInsets.only(left: 30, bottom: 10, top: 10),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(
                   color: Theme.of(context).primaryColor.withOpacity(0.4))),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(
                   color: Theme.of(context).primaryColor.withOpacity(0.4))),
           errorBorder: InputBorder.none,

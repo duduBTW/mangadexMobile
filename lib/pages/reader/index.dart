@@ -1,27 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/service/chapters/model/chapter/index.dart';
+import 'package:mangadex/service/manga/item.dart';
+import 'package:provider/provider.dart';
+
+class MangaReaderPage extends StatefulWidget {
+  static const routeName = '/manga/item/chapter';
+
+  final ChapterModel chapter;
+  const MangaReaderPage({Key? key, required this.chapter}) : super(key: key);
+
+  @override
+  _MangaReaderPageState createState() => _MangaReaderPageState();
+}
+
+class _MangaReaderPageState extends State<MangaReaderPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<MangaItemController>(context, listen: false)
+        .updateServer(widget.chapter.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var server = Provider.of<MangaItemController>(context).serverUrl;
+    return server != null
+        ? MangaReader(
+            chapter: widget.chapter,
+          )
+        : SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(),
+          );
+  }
+}
 
 class MangaReader extends StatefulWidget {
-  const MangaReader({Key? key}) : super(key: key);
+  final ChapterModel chapter;
+  const MangaReader({Key? key, required this.chapter}) : super(key: key);
 
   @override
   _MangaReaderState createState() => _MangaReaderState();
 }
 
 class _MangaReaderState extends State<MangaReader> {
-  final List<String> _images = [
-    "https://images.catmanga.org/series/tawawa/chapters/1/001.jpg",
-    "https://images.catmanga.org/series/tawawa/chapters/1/002.jpg",
-    "https://images.catmanga.org/series/tawawa/chapters/1/003.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/004.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/005.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/006.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/007.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/008.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/009.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/010.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/011.png",
-    "https://images.catmanga.org/series/tawawa/chapters/1/012.png",
-  ];
+  // final List<String> _images = [
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/001.jpg",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/002.jpg",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/003.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/004.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/005.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/006.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/007.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/008.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/009.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/010.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/011.png",
+  //   "https://images.catmanga.org/series/tawawa/chapters/1/012.png",
+  // ];
   final PageController _pageController = PageController();
   int currentPage = 0;
   bool open = false;
@@ -46,8 +84,14 @@ class _MangaReaderState extends State<MangaReader> {
   @override
   void didChangeDependencies() {
     try {
-      for (var page in _images) {
-        precacheImage(new NetworkImage(page), context);
+      for (var page in widget.chapter.attributes.data) {
+        print(
+            "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.attributes.hash}/$page");
+        if (page != null)
+          precacheImage(
+              new NetworkImage(
+                  "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.attributes.hash}/$page"),
+              context);
       }
     } catch (e) {
       print(e);
@@ -102,19 +146,32 @@ class _MangaReaderState extends State<MangaReader> {
   }
 
   void _handleTapDown(TapUpDetails details) {
+    print(currentPage);
+    print(widget.chapter.attributes.data.length);
+    reset();
     if (details.globalPosition.dx < MediaQuery.of(context).size.width / 2) {
-      setState(() {
-        currentPage = currentPage - 1;
-      });
+      if (currentPage != 0) {
+        setState(() {
+          currentPage = currentPage - 1;
+        });
+      }
     } else {
-      setState(() {
-        currentPage = currentPage + 1;
-      });
+      if (currentPage + 1 < widget.chapter.attributes.data.length) {
+        setState(() {
+          currentPage = currentPage + 1;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var title = Provider.of<MangaItemController>(context)
+            .manga
+            ?.data
+            .attributes
+            .title['en'] ??
+        "?";
     return GestureDetector(
       onDoubleTap: onTapScreen,
       child: Scaffold(
@@ -153,7 +210,27 @@ class _MangaReaderState extends State<MangaReader> {
                   child: Container(
                     height: MediaQuery.of(context).size.height,
                     color: Colors.white,
-                    child: Image.network(_images[currentPage]),
+                    child: Image.network(
+                      "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.attributes.hash}/${widget.chapter.attributes.data[currentPage]}",
+                      // loadingBuilder: (ctx, build, event) => SizedBox(
+                      //   width: 22,
+                      //   height: 22,
+                      //   child: CircularProgressIndicator(),
+                      // ),
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
                     alignment: Alignment(0, 0),
                   ),
                 ),
@@ -167,26 +244,42 @@ class _MangaReaderState extends State<MangaReader> {
                   height: 60,
                   child: Container(
                     margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
                         color: Theme.of(context).accentColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(30)),
                     alignment: Alignment(0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Color(0xff3F0000),
+                    child: Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Color(0xff3F0000),
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        Text(
-                          "Getsuyoubi no Tawawa (Blue)",
-                          // style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ],
+                          Expanded(
+                            // width: MediaQuery.of(context).size.width / 1.75,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Text(
+                                title,
+                                style: Theme.of(context).textTheme.subtitle2,
+                                // maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Chap. ${widget.chapter.attributes.chapter ?? "?"}",
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ],
+                      ),
                     ),
                   )),
               AnimatedPositioned(
@@ -202,22 +295,28 @@ class _MangaReaderState extends State<MangaReader> {
                       IconButton(
                         onPressed: () {
                           reset();
-                          setState(() {
-                            currentPage = currentPage - 1;
-                          });
+                          if (currentPage != 0) {
+                            setState(() {
+                              currentPage = currentPage - 1;
+                            });
+                          }
                         },
                         icon: Icon(
                           Icons.arrow_back_ios,
                           size: 12,
                         ),
                       ),
-                      Text("${currentPage + 1}/${_images.length}"),
+                      Text(
+                          "${currentPage + 1}/${widget.chapter.attributes.data.length}"),
                       IconButton(
                         onPressed: () {
                           reset();
-                          setState(() {
-                            currentPage = currentPage + 1;
-                          });
+                          if (currentPage <
+                              widget.chapter.attributes.data.length) {
+                            setState(() {
+                              currentPage = currentPage + 1;
+                            });
+                          }
                         },
                         icon: Icon(
                           Icons.arrow_forward_ios,

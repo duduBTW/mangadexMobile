@@ -40,7 +40,7 @@ class SideBar extends StatelessWidget {
                 height: 30,
               ),
               Text(
-                "DuduBTW",
+                Provider.of<LoginController>(context).username ?? "Guest",
                 style: Theme.of(context).textTheme.headline1,
               ),
               SizedBox(

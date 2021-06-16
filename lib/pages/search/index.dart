@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/shared/manga/index.dart';
 import 'package:mangadex/components/shared/manga/item.dart';
+import 'package:mangadex/service/manga/search.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -39,8 +42,9 @@ class MangaSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mangas = Provider.of<SearchController>(context).mangas;
     return Container(
-      child: ListView(
+      child: Column(
         children: [
           Container(
             padding: EdgeInsets.all(15),
@@ -86,33 +90,40 @@ class MangaSearch extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                MangaMainItem(),
-                SizedBox(
-                  height: 30,
-                ),
-                MangaMainItem(),
-                SizedBox(
-                  height: 30,
-                ),
-                MangaMainItem(),
-                SizedBox(
-                  height: 30,
-                ),
-                MangaMainItem(),
-                SizedBox(
-                  height: 30,
-                ),
-                MangaMainItem(),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            ),
-          )
+          mangas != null
+              ? Expanded(
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    itemBuilder: (ctx, index) => MangaShow(mangas[index]),
+                    itemCount: mangas.length,
+                  ),
+                )
+              : Container(),
+          // child: Column(
+          //   children: [
+          //     MangaMainItem(),
+          //     SizedBox(
+          //       height: 30,
+          //     ),
+          //     MangaMainItem(),
+          //     SizedBox(
+          //       height: 30,
+          //     ),
+          //     MangaMainItem(),
+          //     SizedBox(
+          //       height: 30,
+          //     ),
+          //     MangaMainItem(),
+          //     SizedBox(
+          //       height: 30,
+          //     ),
+          //     MangaMainItem(),
+          //     SizedBox(
+          //       height: 30,
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

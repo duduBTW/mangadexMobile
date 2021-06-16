@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/home/landing/recentlyAdded/index.dart';
-import 'package:mangadex/components/shared/manga/index.dart';
 import 'package:mangadex/service/manga/index.dart';
 import 'package:provider/provider.dart';
 

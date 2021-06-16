@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getLogin() async {
-    if (await LoginController.getToken() != null) onLoginSuccess();
+    if (await LoginControllerHelper.getToken() != null) onLoginSuccess();
   }
 
   void onLoginSuccess() {}

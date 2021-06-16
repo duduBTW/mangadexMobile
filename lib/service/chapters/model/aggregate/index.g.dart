@@ -6,8 +6,8 @@ part of 'index.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChaptersModel _$ChaptersModelFromJson(Map<String, dynamic> json) {
-  return ChaptersModel(
+MangaAgreModel _$MangaAgreModelFromJson(Map<String, dynamic> json) {
+  return MangaAgreModel(
     (json['volumes'] as Map<String, dynamic>).map(
       (k, e) =>
           MapEntry(k, ChaptersVolumeModel.fromJson(e as Map<String, dynamic>)),
@@ -16,7 +16,7 @@ ChaptersModel _$ChaptersModelFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ChaptersModelToJson(ChaptersModel instance) =>
+Map<String, dynamic> _$MangaAgreModelToJson(MangaAgreModel instance) =>
     <String, dynamic>{
       'result': instance.result,
       'volumes': instance.volumes.map((k, e) => MapEntry(k, e.toJson())),

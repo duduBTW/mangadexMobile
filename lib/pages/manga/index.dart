@@ -34,7 +34,9 @@ class _MangaPageState extends State<MangaPage> {
   }
 
   void onScroll() {
-    if (_controller.position.pixels > 700 && !_showNav) {
+    if (_controller.position.atEdge &&
+        !_showNav &&
+        _controller.position.pixels != 0) {
       setState(() {
         _showNav = true;
       });
@@ -42,12 +44,10 @@ class _MangaPageState extends State<MangaPage> {
       return;
     }
 
-    if (_controller.position.pixels < 700 && _showNav) {
+    if (!_controller.position.atEdge && _showNav) {
       setState(() {
         _showNav = false;
       });
-
-      return;
     }
   }
 
@@ -67,11 +67,25 @@ class _MangaPageState extends State<MangaPage> {
               actions: [
                 IconButton(
                   icon: Icon(
-                    Icons.favorite_border_rounded,
+                    Icons.arrow_upward_rounded,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    _controller
+                      ..animateTo(
+                        0,
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 400),
+                      );
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.more_vert,
                     color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {},
-                )
+                ),
               ],
             )
           : null,
@@ -123,7 +137,9 @@ class _MangaPageState extends State<MangaPage> {
                     MangaInfo(
                       manga: manga,
                     ),
-                    Chapters()
+                    Chapters(
+                      controller: _controller,
+                    )
                   ],
                 ),
               ],

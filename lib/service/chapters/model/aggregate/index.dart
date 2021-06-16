@@ -3,16 +3,16 @@ import 'package:json_annotation/json_annotation.dart';
 part 'index.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class ChaptersModel {
+class MangaAgreModel {
   final String result;
   final Map<String, ChaptersVolumeModel> volumes;
 
-  ChaptersModel(this.volumes, this.result);
+  MangaAgreModel(this.volumes, this.result);
 
-  factory ChaptersModel.fromJson(Map<String, dynamic> data) =>
-      _$ChaptersModelFromJson(data);
+  factory MangaAgreModel.fromJson(Map<String, dynamic> data) =>
+      _$MangaAgreModelFromJson(data);
 
-  Map<String, dynamic> toJson() => _$ChaptersModelToJson(this);
+  Map<String, dynamic> toJson() => _$MangaAgreModelToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
