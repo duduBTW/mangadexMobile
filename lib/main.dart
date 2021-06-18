@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
         home: HomePage(http),
         routes: {
           '/manga/list': (ctx) => MangaList(),
-          '/search': (ctx) => SearchPage(),
           '/search/filters/manga': (ctx) => MangaFilters(),
           // '/reader': (ctx) => MangaReader(),
         },

@@ -17,8 +17,6 @@ class _LandingState extends State<Landing> {
   void initState() {
     super.initState();
 
-    print("Build");
-
     Provider.of<MangaController>(context, listen: false).getRecentMangas();
     // UserController.getUserFollowedMangas(30, 0)
     //     .then((response) => print(response.data));

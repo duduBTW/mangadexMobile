@@ -5,13 +5,32 @@ import 'package:mangadex/service/manga/search.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  final ScrollController controller;
+  final bool showScrollUp;
+  const SearchPage(
+      {Key? key, required this.controller, required this.showScrollUp})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        floatingActionButton: showScrollUp
+            ? FloatingActionButton(
+                backgroundColor:
+                    Theme.of(context).backgroundColor.withOpacity(0.75),
+                onPressed: () => controller
+                  ..animateTo(
+                    0.0,
+                    curve: Curves.easeOut,
+                    duration: const Duration(milliseconds: 200),
+                  ),
+                elevation: 0,
+                child: Icon(Icons.arrow_upward_rounded,
+                    color: Theme.of(context).primaryColor),
+              )
+            : Container(),
         appBar: TabBar(
           tabs: [
             Tab(

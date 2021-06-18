@@ -14,12 +14,41 @@ class SearchTab extends StatefulWidget {
 
 class _SearchTabState extends State<SearchTab>
     with AutomaticKeepAliveClientMixin<SearchTab> {
+  ScrollController _controller = new ScrollController();
+
   String searchValue = "";
   bool showSearch = true;
+  bool showScrollUp = false;
+
   void onChange(newValue) {
     setState(() {
       searchValue = newValue;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(onScroll);
+  }
+
+  void onScroll() {
+    print(_controller.position.atEdge);
+    if (_controller.position.pixels != 0) {
+      if (!showScrollUp) {
+        setState(() {
+          showScrollUp = true;
+        });
+      }
+
+      return;
+    }
+
+    if (showScrollUp) {
+      setState(() {
+        showScrollUp = false;
+      });
+    }
   }
 
   void onSubmitted() {
@@ -35,32 +64,42 @@ class _SearchTabState extends State<SearchTab>
     super.build(context);
 
     return SafeArea(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(
-          children: [
-            SizedBox(
-              width: 30,
+      child: NestedScrollView(
+        controller: _controller,
+        headerSliverBuilder: (context, value) => [
+          SliverAppBar(
+            floating: true,
+            backgroundColor: Colors.transparent,
+            leading: Container(
+              width: 0,
             ),
-            GestureDetector(
-              onTap: () => widget._scaffoldKey.currentState?.openDrawer(),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg"),
-                backgroundColor: Colors.transparent,
-                radius: 15.0,
-              ),
+            leadingWidth: 0,
+            title: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => widget._scaffoldKey.currentState?.openDrawer(),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg"),
+                    backgroundColor: Colors.transparent,
+                    radius: 15.0,
+                  ),
+                ),
+                Expanded(child: SearchInput(onChange, onSubmitted)),
+              ],
             ),
-            Expanded(child: SearchInput(onChange, onSubmitted)),
-          ],
-        ),
-        showSearch
+            actions: [Container()],
+          )
+        ],
+        body: showSearch
             ? SearchType(
                 searchValue: searchValue,
               )
             : Expanded(
-                child: SearchPage(),
+                child: SearchPage(
+                    controller: _controller, showScrollUp: showScrollUp),
               ),
-      ]),
+      ),
     );
   }
 
@@ -101,8 +140,9 @@ class _SearchInputState extends State<SearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(30),
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.only(left: 15),
       child: TextField(
         onEditingComplete: () {
           FocusScope.of(context).unfocus();
@@ -115,11 +155,13 @@ class _SearchInputState extends State<SearchInput> {
           prefixIcon: Icon(
             Icons.search,
             color: Theme.of(context).primaryColor,
+            size: 20,
           ),
           filled: true,
           fillColor: Theme.of(context).accentColor,
           hintText: 'Manga name, author or scan',
-          contentPadding: const EdgeInsets.only(left: 30, bottom: 10, top: 10),
+          contentPadding: const EdgeInsets.only(left: 0, bottom: 0, top: 0),
+          isDense: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
           ),

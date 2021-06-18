@@ -39,8 +39,9 @@ class MangadexService {
         if (valid != null) {
           validUntil = DateTime.parse(valid);
         } else {
-          handler.reject(
-              DioError(error: "validUntil not found", requestOptions: options));
+          return handler.next(options);
+          // handler.reject(
+          //     DioError(error: "validUntil not found", requestOptions: options));
         }
       }
 
