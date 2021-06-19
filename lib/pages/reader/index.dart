@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/shared/chapters/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +106,8 @@ class _MangaReaderState extends State<MangaReader> {
   void initState() {
     super.initState();
 
+    Provider.of<MangaItemController>(context, listen: false).chapterReadingNow =
+        widget.chapter.attributes.chapter!;
     _pageController.addListener(onPageChange);
   }
 
@@ -156,9 +161,26 @@ class _MangaReaderState extends State<MangaReader> {
         });
       }
     } else {
-      if (currentPage + 1 < widget.chapter.attributes.data.length) {
+      nextPage();
+    }
+  }
+
+  void nextPage() {
+    if (currentPage < widget.chapter.attributes.data.length) {
+      print(currentPage);
+      print(widget.chapter.attributes.data.length);
+      if (currentPage == widget.chapter.attributes.data.length - 2) {
+        // get next charp data
+        Provider.of<MangaItemController>(context, listen: false)
+            .getNextChapter();
+      }
+      setState(() {
+        currentPage = currentPage + 1;
+      });
+
+      if (currentPage == widget.chapter.attributes.data.length) {
         setState(() {
-          currentPage = currentPage + 1;
+          open = true;
         });
       }
     }
@@ -201,40 +223,43 @@ class _MangaReaderState extends State<MangaReader> {
               //         ],
               //       ),
               //     )),
-              GestureDetector(
-                onTapUp: _handleTapDown,
-                child: InteractiveViewer(
-                  transformationController: _transformationController,
-                  minScale: 1,
-                  maxScale: 3,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    color: Colors.white,
-                    child: Image.network(
-                      "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.attributes.hash}/${widget.chapter.attributes.data[currentPage]}",
-                      // loadingBuilder: (ctx, build, event) => SizedBox(
-                      //   width: 22,
-                      //   height: 22,
-                      //   child: CircularProgressIndicator(),
-                      // ),
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
+              currentPage < widget.chapter.attributes.data.length
+                  ? GestureDetector(
+                      onTapUp: _handleTapDown,
+                      child: InteractiveViewer(
+                        transformationController: _transformationController,
+                        minScale: 1,
+                        maxScale: 3,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          color: Colors.white,
+                          child: Image.network(
+                            "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.attributes.hash}/${widget.chapter.attributes.data[currentPage]}",
+                            // loadingBuilder: (ctx, build, event) => SizedBox(
+                            //   width: 22,
+                            //   height: 22,
+                            //   child: CircularProgressIndicator(),
+                            // ),
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                    alignment: Alignment(0, 0),
-                  ),
-                ),
-              ),
+                          alignment: Alignment(0, 0),
+                        ),
+                      ),
+                    )
+                  : ChapFinished(),
               AnimatedPositioned(
                   duration: Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
@@ -249,37 +274,34 @@ class _MangaReaderState extends State<MangaReader> {
                         color: Theme.of(context).accentColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(30)),
                     alignment: Alignment(0, 0),
-                    child: Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                            padding: EdgeInsets.all(0),
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: Color(0xff3F0000),
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Color(0xff3F0000),
                           ),
-                          Expanded(
-                            // width: MediaQuery.of(context).size.width / 1.75,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Text(
-                                title,
-                                style: Theme.of(context).textTheme.subtitle2,
-                                // maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                        Expanded(
+                          // width: MediaQuery.of(context).size.width / 1.75,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              title,
+                              style: Theme.of(context).textTheme.subtitle2,
+                              // maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Text(
-                            "Chap. ${widget.chapter.attributes.chapter ?? "?"}",
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          "Chap. ${widget.chapter.attributes.chapter ?? "?"}",
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
                     ),
                   )),
               AnimatedPositioned(
@@ -307,16 +329,11 @@ class _MangaReaderState extends State<MangaReader> {
                         ),
                       ),
                       Text(
-                          "${currentPage + 1}/${widget.chapter.attributes.data.length}"),
+                          "${min(currentPage + 1, widget.chapter.attributes.data.length)}/${widget.chapter.attributes.data.length}"),
                       IconButton(
                         onPressed: () {
                           reset();
-                          if (currentPage <
-                              widget.chapter.attributes.data.length) {
-                            setState(() {
-                              currentPage = currentPage + 1;
-                            });
-                          }
+                          nextPage();
                         },
                         icon: Icon(
                           Icons.arrow_forward_ios,
@@ -332,6 +349,64 @@ class _MangaReaderState extends State<MangaReader> {
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ChapFinished extends StatelessWidget {
+  const ChapFinished({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var next = Provider.of<MangaItemController>(context).next;
+    var before = Provider.of<MangaItemController>(context).before;
+
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 90,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Text("Next chapter"),
+            ),
+            (next != "")
+                ? ChapManga(
+                    label: next,
+                  )
+                : Padding(
+                    padding:
+                        const EdgeInsets.only(top: 30, right: 30, left: 30),
+                    child: Row(
+                      children: [
+                        Text("Next chapter not avaliable"),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Image.network(
+                            "https://cdn.betterttv.net/frankerfacez_emote/378987/2"),
+                      ],
+                    ),
+                  ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Text("Previus chapter"),
+            ),
+            ChapManga(
+              label: before,
+            ),
+          ],
         ),
       ),
     );

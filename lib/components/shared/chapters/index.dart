@@ -150,7 +150,9 @@ class _ChaptersState extends State<Chapters> {
 
 class ChapManga extends StatelessWidget {
   final String label;
-  const ChapManga({Key? key, required this.label}) : super(key: key);
+  final bool popOnOpen;
+  const ChapManga({Key? key, required this.label, this.popOnOpen = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -192,9 +194,20 @@ class ChapManga extends StatelessWidget {
               if (charItems != null)
                 ...charItems
                     .map((charItem) => GestureDetector(
-                              onTap: () => Navigator.of(context).pushNamed(
-                                  MangaReaderPage.routeName,
-                                  arguments: charItem),
+                              onTap: () => {
+                                if (popOnOpen)
+                                  {
+                                    Navigator.of(context).popAndPushNamed(
+                                        MangaReaderPage.routeName,
+                                        arguments: charItem)
+                                  }
+                                else
+                                  {
+                                    Navigator.of(context).pushNamed(
+                                        MangaReaderPage.routeName,
+                                        arguments: charItem)
+                                  }
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 30),
                                 child: Row(

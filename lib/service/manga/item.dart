@@ -32,6 +32,10 @@ class MangaItemController with ChangeNotifier {
     notifyListeners();
   }
 
+  String chapterReadingNow = "";
+  String next = "";
+  String before = "";
+
   List<CoverModel>? _covers;
   List<CoverModel>? get covers => _covers;
   void updateCovers() async {
@@ -73,6 +77,20 @@ class MangaItemController with ChangeNotifier {
     _chapter[id] =
         await ChaptersControllerHelper.getChapter(http, _manga!.data.id, id);
     notifyListeners();
+  }
+
+  void getNextChapter() async {
+    print(_chaptersList.indexOf(chapterReadingNow));
+    var index = _chaptersList.indexOf(chapterReadingNow);
+    var beforeCalc = _chaptersList[index + 1];
+    var nextCalc = _chaptersList[index - 1];
+
+    next = nextCalc;
+    before = beforeCalc;
+
+    notifyListeners();
+    getChapter(nextCalc);
+    getChapter(beforeCalc);
   }
 
   void updateServer(String idChap) async {
