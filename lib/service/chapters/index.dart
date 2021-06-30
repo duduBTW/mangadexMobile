@@ -1,5 +1,7 @@
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/http.dart';
+import 'package:mangadex/service/shared/pagination/index.dart';
+import 'package:mangadex/service/shared/tuple/index.dart';
 
 import 'model/aggregate/index.dart';
 
@@ -25,10 +27,12 @@ class ChaptersControllerHelper {
     return chaps;
   }
 
-  static Future<List<ChapterModel>> getLatestChapter(
-      MangadexService http) async {
+  static Future<Tuple<List<ChapterModel>, PaginationModel>> getLatestChapter(
+      MangadexService http,
+      {int limit = 30,
+      int offset = 0}) async {
     var response = await http.get(
-        "/user/follows/manga/feed?limit=30&offset=0&order[publishAt]=desc");
+        "/user/follows/manga/feed?limit=$limit&offset=$offset&order[publishAt]=desc");
 
     List<ChapterModel> chaps = [];
 
@@ -36,7 +40,15 @@ class ChaptersControllerHelper {
       chaps.add(ChapterModel.fromJson(coverItemApi));
     }
 
-    return chaps;
+    return Tuple<List<ChapterModel>, PaginationModel>(
+        item1: chaps,
+        item2: PaginationModel(
+          limit: response.data['limit'],
+          offset: response.data['offset'],
+          total: response.data['total'],
+        ));
+
+    // return chaps;
   }
 
   static Future<List<ChapterModel>> getGeneralLatestChapter(

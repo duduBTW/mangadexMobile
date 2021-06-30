@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/configuration/count/index.dart';
 import 'package:mangadex/pages/configuration/index.dart';
 import 'package:mangadex/pages/home/index.dart';
 import 'package:mangadex/pages/manga/index.dart';
 import 'package:mangadex/pages/mangaList/index.dart';
 import 'package:mangadex/pages/reader/index.dart';
 import 'package:mangadex/pages/search/filters/manga.dart';
-import 'package:mangadex/pages/search/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/login/index.dart';
@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
           '/manga/list': (ctx) => MangaList(),
           '/search/filters/manga': (ctx) => MangaFilters(),
           '/configuration': (ctx) => ConfigurationPage(),
+          '/configuration/count': (ctx) => ConfigurationCount(),
         },
         onGenerateRoute: (settings) {
           // If you push the PassArguments route

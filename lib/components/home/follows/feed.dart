@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/home/follows/chaps.dart';
+import 'package:mangadex/service/manga/user.dart';
+import 'package:provider/provider.dart';
 
 import 'mangas.dart';
 
@@ -16,7 +18,8 @@ class _FollowsState extends State<Follows>
   @override
   void initState() {
     super.initState();
-    // Provider.of<MangaController>(context, listen: false).getUserMangas();
+    Provider.of<UserMangaController>(context, listen: false).initUserMangas();
+    Provider.of<UserMangaController>(context, listen: false).initUserCahpters();
   }
 
   @override

@@ -9,9 +9,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 
 class Landing extends StatefulWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey;
-
-  const Landing(this._scaffoldKey);
+  const Landing();
 
   @override
   _LandingState createState() => _LandingState();
@@ -22,6 +20,10 @@ class _LandingState extends State<Landing> {
   void initState() {
     super.initState();
 
+    loadStuff();
+  }
+
+  void loadStuff() {
     Provider.of<MangaController>(context, listen: false).getRecentMangas();
     Provider.of<MangaController>(context, listen: false).fetchRecentChapters();
   }
@@ -31,54 +33,38 @@ class _LandingState extends State<Landing> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        SingleChildScrollView(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            child:
-                // SliverAppBar(
-                //   actions: [Container()],
-                //   automaticallyImplyLeading: false,
-                //   // Provide a standard title.
-                //   title: Row(
-                //     children: [
-                //       GestureDetector(
-                //         onTap: () => widget._scaffoldKey.currentState?.openDrawer(),
-                //         child: CircleAvatar(
-                //           backgroundImage: NetworkImage(
-                //               "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg"),
-                //           backgroundColor: Colors.transparent,
-                //           radius: 15.0,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                //   floating: true,
-                //   elevation: 0,
-                //   backgroundColor: Theme.of(context).backgroundColor,
-                // ),
-                Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 110,
-                  ),
-                  RecentlyAdded(),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Text(
-                      "Last Updated",
-                      style: Theme.of(context).textTheme.headline3,
+        RefreshIndicator(
+            color: Theme.of(context).primaryColor,
+            onRefresh: () => Future.sync(
+                  () => loadStuff(),
+                ),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 110,
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  RecentChapters(),
-                ],
+                    RecentlyAdded(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text(
+                        "Last Updated",
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    RecentChapters(),
+                  ],
+                ),
               ),
             )),
         buildFloatingSearchBar()
@@ -112,6 +98,7 @@ class _LandingState extends State<Landing> {
             borderRadius: BorderRadius.circular(30),
             child: Material(
               child: MangaSearch(),
+              // child: SearchPage(),
               color: Theme.of(context).backgroundColor,
             ),
           ),

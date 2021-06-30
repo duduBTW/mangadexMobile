@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/configuration/reader/index.dart';
 import 'package:mangadex/service/login/index.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'package:page_transition/page_transition.dart';
+
 import 'choices.dart';
-import 'dart:convert';
+import 'count/index.dart';
+import 'filter/index.dart';
 
 class ConfigurationPage extends StatefulWidget {
   @override
@@ -30,6 +34,36 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
           initialChildSize: 0.8,
           // minChildSize: 0.8,
           title: Text("Language"),
+        );
+      },
+    );
+  }
+
+  void _showConfigurationFilters(BuildContext context) async {
+    final List<Map<String, String>> tags = [
+      {"code": "safe", "label": "Safe content"},
+      {"code": "suggestive", "label": "Suggestive content"},
+      {"code": "erotica", "label": "Erotica content"},
+      {"code": "pornographic", "label": "Pornographic content"},
+    ];
+
+    await showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return MultiSelectBottomSheet(
+          items: tags.map((item) {
+            return MultiSelectItem(item['code'], item['label']!);
+          }).toList(),
+          initialValue: [],
+          onConfirm: (values) {
+            print(values);
+          },
+          searchable: true,
+          // listType: MultiSelectListType.CHIP,
+          maxChildSize: 1,
+          initialChildSize: 0.8,
+          // minChildSize: 0.8,
+          title: Text("Content Filter"),
         );
       },
     );
@@ -101,7 +135,31 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () => Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: MangaReaderConfiguration())),
+                  leading: SizedBox(
+                    width: 65,
+                    child: Align(
+                      child: Icon(
+                        Icons.chrome_reader_mode_outlined,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      alignment: Alignment(0, 0),
+                    ),
+                  ),
+                  title: Text("Manga reader"),
+                  contentPadding: EdgeInsets.all(15),
+                  visualDensity: VisualDensity.standard,
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 5, right: 15),
+                    child: Text("Change the manga reader configuration."),
+                  ),
+                ),
+                ListTile(
+                  onTap: () => _showConfigurationFilters(context),
                   leading: SizedBox(
                     width: 65,
                     child: Align(
@@ -122,7 +180,11 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () => Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: ConfigurationCount())),
                   leading: SizedBox(
                     width: 65,
                     child: Align(
@@ -133,34 +195,12 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                       alignment: Alignment(0, 0),
                     ),
                   ),
-                  title: Text("Default Item Load Count"),
+                  title: Text("Load Count"),
                   contentPadding: EdgeInsets.all(15),
                   visualDensity: VisualDensity.standard,
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 5, right: 15),
-                    child: Text(
-                        "A lower value may reduce the time taken on slower networks."),
-                  ),
-                ),
-                ListTile(
-                  onTap: () {},
-                  leading: SizedBox(
-                    width: 65,
-                    child: Align(
-                      child: Icon(
-                        Icons.format_list_numbered_rtl,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      alignment: Alignment(0, 0),
-                    ),
-                  ),
-                  title: Text("Load More Load Count"),
-                  contentPadding: EdgeInsets.all(15),
-                  visualDensity: VisualDensity.standard,
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 5, right: 15),
-                    child: Text(
-                        "How many items to load initially when looking at item lists."),
+                    child: Text("Set load counts."),
                   ),
                 ),
                 Divider(

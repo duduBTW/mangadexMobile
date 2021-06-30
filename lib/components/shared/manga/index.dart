@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mangadex/components/shared/chapters/index.dart';
+import 'package:mangadex/components/shared/manga/tags.dart';
 import 'package:mangadex/pages/manga/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
@@ -255,44 +256,6 @@ class ChaptersMangaItem extends StatelessWidget {
           borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(30),
               bottomLeft: Radius.circular(30))),
-    );
-  }
-}
-
-class MangaTags extends StatelessWidget {
-  const MangaTags({
-    Key? key,
-    required this.manga,
-  }) : super(key: key);
-
-  final MangaModel manga;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: manga.data.attributes.tags.length,
-      physics:
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (ctx, index) {
-        return Container(
-            padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
-            child: Text(
-                manga.data.attributes.tags[index]['attributes']['name']['en'],
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1,
-                    fontSize: 12)),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(
-                    color: Theme.of(context).primaryColor.withOpacity(0.5))));
-      },
-      separatorBuilder: (ctx, index) => SizedBox(
-        width: 5,
-      ),
     );
   }
 }

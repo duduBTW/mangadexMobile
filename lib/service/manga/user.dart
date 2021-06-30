@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mangadex/service/chapters/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
@@ -11,6 +12,7 @@ import 'index.dart';
 
 class UserMangaController with ChangeNotifier {
   late final MangadexService http;
+  static final storage = new FlutterSecureStorage();
 
   UserMangaController(this.http);
 
@@ -28,7 +30,9 @@ class UserMangaController with ChangeNotifier {
   List<MangaModel>? get userMangas => _userMangas;
 
   Future<void> fetchChapters() async {
-    _userChapters = await ChaptersControllerHelper.getLatestChapter(http);
+    var chaps = await ChaptersControllerHelper.getLatestChapter(http);
+
+    _userChapters = chaps.item1;
     notifyListeners();
 
     var ids = _userChapters!
@@ -49,6 +53,7 @@ class UserMangaController with ChangeNotifier {
     notifyListeners();
   }
 
+  /////////
   final _pagingController = PagingController<int, MangaModel>(
     firstPageKey: 0,
   );
@@ -62,10 +67,11 @@ class UserMangaController with ChangeNotifier {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      const int PERPAGE = 30;
+      int perpage =
+          int.parse(await storage.read(key: "DEF_LOAD_COUNT") ?? "30");
 
       var result = await MangaControllerHelper.getUserMangasData(http,
-          limit: PERPAGE * (pageKey + 1), offset: PERPAGE * pageKey);
+          limit: perpage * (pageKey + 1), offset: perpage * pageKey);
       var pageResult = result.item2;
       var mangas = result.item1;
 
@@ -89,4 +95,68 @@ class UserMangaController with ChangeNotifier {
       throw error;
     }
   }
+  /////////
+
+  /////////
+  final _chapterPageController = PagingController<int, ChapterModel>(
+    firstPageKey: 0,
+  );
+  PagingController<int, ChapterModel> get chapterPageController =>
+      _chapterPageController;
+
+  void initUserCahpters() {
+    _chapterPageController.addPageRequestListener((pageKey) {
+      _fetchChapterPage(pageKey);
+    });
+  }
+
+  Future<void> _fetchChapterPage(int pageKey) async {
+    try {
+      int perpage =
+          int.parse(await storage.read(key: "DEF_LOAD_COUNT") ?? "30");
+
+      var result = await ChaptersControllerHelper.getLatestChapter(http,
+          limit: perpage * (pageKey + 1), offset: perpage * pageKey);
+
+      var pageResult = result.item2;
+      var chapters = result.item1;
+
+      final previouslyFetchedItemsCount =
+          _chapterPageController.itemList?.length ?? 0;
+      final totalFetchedItemsCount =
+          previouslyFetchedItemsCount + chapters.length;
+      final isLastPage = totalFetchedItemsCount == pageResult.total;
+
+      if (isLastPage) {
+        _chapterPageController.appendLastPage(chapters);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _chapterPageController.appendPage(chapters, nextPageKey);
+      }
+
+      var ids = result.item1
+          .map((chapter) => chapter.relationships
+              .singleWhere((element) => element!['type'] == "manga")!['id']
+              .toString())
+          .toList();
+
+      ids = ids.toSet().toList();
+
+      var mangas = await MangaControllerHelper.getMangasData(http,
+          identificatiors: ids, limit: perpage.toString());
+
+      Map<String, MangaModel> userManTemp = {};
+      for (var i = 0; i < mangas.item1.length; i++) {
+        userManTemp["${mangas.item1[i].data.id}"] = mangas.item1[i];
+      }
+      _userChaptersMangas = _userChaptersMangas != null
+          ? {..._userChaptersMangas!, ...userManTemp}
+          : userManTemp;
+      notifyListeners();
+    } catch (error) {
+      _chapterPageController.error = error;
+      throw error;
+    }
+  }
+  /////////
 }

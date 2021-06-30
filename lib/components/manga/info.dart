@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:expandable_page_view/expandable_page_view.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/shared/manga/tags.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
-import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
 class MangaInfo extends StatefulWidget {
@@ -17,7 +18,7 @@ class MangaInfo extends StatefulWidget {
 }
 
 class _MangaInfoState extends State<MangaInfo> {
-  static const int DESC_MAX_LENGTH = 350;
+  static const int DESC_MAX_LENGTH = 300;
 
   int currentPage = 0;
   bool showAll = false;
@@ -35,32 +36,79 @@ class _MangaInfoState extends State<MangaInfo> {
     var desc = manga.data.attributes.description['en']!;
 
     List<Widget> splashData = [
-      RichText(
-        text: TextSpan(
-          text: showAll
-              ? desc
-              : desc
-                  .toString()
-                  .substring(0, min(desc.toString().length, DESC_MAX_LENGTH)),
-          style: Theme.of(context).textTheme.bodyText1,
-          children: [
-            if (desc.length > DESC_MAX_LENGTH)
-              TextSpan(
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      changeShow();
-                      // Single tapped.
-                    },
-                  text: showAll ? ' Read less...' : ' ...Read more',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor)),
-          ],
-        ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Author",
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text("Inoue Koharu"),
+                ],
+              ),
+              Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Artist",
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text("Inoue Koharu"),
+                ],
+              ),
+              Spacer(),
+            ],
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Text(
+            "Synopsis",
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          RichText(
+            text: TextSpan(
+              text: showAll
+                  ? desc
+                  : desc.toString().substring(
+                      0, min(desc.toString().length, DESC_MAX_LENGTH)),
+              style: Theme.of(context).textTheme.bodyText1,
+              children: [
+                if (desc.length > DESC_MAX_LENGTH)
+                  TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          changeShow();
+                          // Single tapped.
+                        },
+                      text: showAll ? ' Read less...' : ' ...Read more',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor)),
+              ],
+            ),
+          ),
+        ],
       ),
+      Expanded(child: MangaTagsGrid(manga: manga)),
       MangaArts(),
     ];
-    print(splashData.length);
+
     return IntrinsicHeight(
       child: Container(
         // height: 400,
@@ -167,19 +215,19 @@ class _MangaArtsState extends State<MangaArts> {
     var _mangaId = Provider.of<MangaItemController>(context).manga?.data.id;
 
     return Container(
-      height: _covers == null || _covers.length <= 2
-          ? MediaQuery.of(context).size.width * (2 / 3) - 15
-          : (MediaQuery.of(context).size.width * (2 / 3)) + 50,
+      // height: _covers == null || _covers.length <= 2
+      //     ? MediaQuery.of(context).size.width * (2 / 3) - 15
+      //     : (MediaQuery.of(context).size.width * (2 / 3)) + 50,
       // padding: EdgeInsets.all(30),
       child: _covers != null
           ? GridView.builder(
+              shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 2 / 3,
                   mainAxisSpacing: 15,
                   crossAxisSpacing: 15),
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
+              physics: NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               itemCount: _covers.length,
               itemBuilder: (ctx, i) => Stack(
@@ -210,15 +258,6 @@ class _MangaArtsState extends State<MangaArts> {
                           )),
                     ),
                   ),
-                  // Expanded(
-                  //   child: ClipRRect(
-                  //     borderRadius: BorderRadius.circular(15),
-                  //     child: Image.network(
-                  //       "https://uploads.mangadex.org/covers/$_mangaId/${_covers[i].data.attributes.fileName}.512.jpg",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
                   Positioned(
                       bottom: 0,
                       top: 0,
@@ -238,7 +277,6 @@ class _MangaArtsState extends State<MangaArts> {
                           ),
                         ),
                       )),
-
                   Positioned(
                     child: Text(
                       "Vol. ${_covers[i].data.attributes.volume ?? "Actual"}",

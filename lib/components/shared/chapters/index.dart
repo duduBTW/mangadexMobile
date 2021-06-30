@@ -172,11 +172,13 @@ class ChapManga extends StatelessWidget {
 class ChapItem extends StatelessWidget {
   final ChapterModel charItem;
   final MangaModel? manga;
+  final double paddingBottom;
   const ChapItem({
     Key? key,
     required this.popOnOpen,
     required this.charItem,
     this.manga,
+    this.paddingBottom = 30,
   }) : super(key: key);
 
   final bool popOnOpen;
@@ -199,7 +201,7 @@ class ChapItem extends StatelessWidget {
       },
       child: Container(
         color: Colors.transparent,
-        padding: const EdgeInsets.only(bottom: 30),
+        padding: EdgeInsets.only(bottom: paddingBottom),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

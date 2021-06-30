@@ -11,31 +11,31 @@ class SearchPage extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        body: MangaSearch(),
-        // appBar: TabBar(
-        //   tabs: [
-        //     Tab(
-        //       text: "Manga",
-        //     ),
-        //     Tab(
-        //       text: "Author",
-        //     ),
-        //     Tab(
-        //       text: "Users",
-        //     ),
-        //     Tab(
-        //       text: "Scans",
-        //     ),
-        //   ],
-        // ),
-        // body: TabBarView(
-        //   children: [
-        //     MangaSearch(),
-        //     AuthorSearch(),
-        //     ScanSearch(),
-        //     ScanSearch(),
-        //   ],
-        // ),
+        // body: MangaSearch(),
+        appBar: TabBar(
+          tabs: [
+            Tab(
+              text: "Manga",
+            ),
+            Tab(
+              text: "Author",
+            ),
+            Tab(
+              text: "Users",
+            ),
+            Tab(
+              text: "Scans",
+            ),
+          ],
+        ),
+        body: TabBarView(
+          children: [
+            MangaSearch(),
+            AuthorSearch(),
+            ScanSearch(),
+            ScanSearch(),
+          ],
+        ),
       ),
     );
   }

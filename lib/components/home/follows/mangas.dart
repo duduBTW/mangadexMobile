@@ -5,21 +5,7 @@ import 'package:mangadex/service/manga/model/index.dart';
 import 'package:mangadex/service/manga/user.dart';
 import 'package:provider/provider.dart';
 
-class FollowsMangas extends StatefulWidget {
-  const FollowsMangas({Key? key}) : super(key: key);
-
-  @override
-  _FollowsMangasState createState() => _FollowsMangasState();
-}
-
-class _FollowsMangasState extends State<FollowsMangas> {
-  @override
-  void initState() {
-    super.initState();
-    print("start");
-    Provider.of<UserMangaController>(context, listen: false).initUserMangas();
-  }
-
+class FollowsMangas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _pagingController =

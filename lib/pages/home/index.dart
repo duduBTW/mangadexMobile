@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      Landing(_scaffoldKey),
+      Landing(),
       // SearchTab(_scaffoldKey),
       Provider.of<LoginController>(context).loggedIn
           ? Follows(

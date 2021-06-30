@@ -8,6 +8,8 @@ import 'package:mangadex/service/manga/model/index.dart';
 import 'package:mangadex/service/shared/pagination/index.dart';
 import 'package:mangadex/service/shared/tuple/index.dart';
 
+import 'model/tags/index.dart';
+
 class MangaController with ChangeNotifier {
   late final MangadexService http;
 
@@ -25,7 +27,8 @@ class MangaController with ChangeNotifier {
   Map<String, MangaModel>? get recentChaptersMangas => _recentChaptersMangas;
 
   Future<PaginationModel> getRecentMangas() async {
-    // _recentMangas = await MangaControllerHelper.getRecentMangasData(http)..item1;
+    _recentMangas = null;
+
     var recentMangaResult = await MangaControllerHelper.getMangasData(http);
     _recentMangas = recentMangaResult.item1;
     notifyListeners();
@@ -34,6 +37,10 @@ class MangaController with ChangeNotifier {
   }
 
   Future<void> fetchRecentChapters() async {
+    _recentChapters = null;
+    _recentChaptersMangas = null;
+    notifyListeners();
+
     _recentChapters =
         await ChaptersControllerHelper.getGeneralLatestChapter(http);
     notifyListeners();
@@ -138,5 +145,17 @@ class MangaControllerHelper {
           offset: response.data['offset'],
           total: response.data['total'],
         ));
+  }
+
+  static Future<List<TagsModel>> getTags(MangadexService http) async {
+    var response = await http.get("/manga/tag");
+
+    List<TagsModel> tagList = [];
+
+    for (dynamic tagItem in response.data) {
+      tagList.add(TagsModel.fromJson(tagItem));
+    }
+
+    return tagList;
   }
 }
