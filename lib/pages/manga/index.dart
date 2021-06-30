@@ -3,7 +3,6 @@ import 'package:mangadex/components/manga/background.dart';
 import 'package:mangadex/components/manga/header.dart';
 import 'package:mangadex/components/manga/info.dart';
 import 'package:mangadex/components/shared/chapters/index.dart';
-import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +10,8 @@ import 'package:provider/provider.dart';
 class MangaPage extends StatefulWidget {
   static const routeName = '/manga/item';
   final MangaModel manga;
-  final MangadexService http;
 
-  const MangaPage({Key? key, required this.manga, required this.http})
-      : super(key: key);
+  const MangaPage({Key? key, required this.manga}) : super(key: key);
 
   @override
   _MangaPageState createState() => _MangaPageState();

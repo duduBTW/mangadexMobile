@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/configuration/index.dart';
 import 'package:mangadex/pages/home/index.dart';
 import 'package:mangadex/pages/manga/index.dart';
 import 'package:mangadex/pages/mangaList/index.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/manga/list': (ctx) => MangaList(),
           '/search/filters/manga': (ctx) => MangaFilters(),
-          // '/reader': (ctx) => MangaReader(),
+          '/configuration': (ctx) => ConfigurationPage(),
         },
         onGenerateRoute: (settings) {
           // If you push the PassArguments route
@@ -62,7 +63,6 @@ class MyApp extends StatelessWidget {
               builder: (context) {
                 return MangaPage(
                   manga: manga,
-                  http: http,
                 );
               },
             );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/components/home/follows/chaps.dart';
 
 import 'mangas.dart';
 
@@ -60,7 +61,7 @@ class _FollowsState extends State<Follows>
               ],
             ),
           ),
-          body: TabBarView(children: [FollowsMangas(), Container()]),
+          body: TabBarView(children: [FollowsChapters(), FollowsMangas()]),
         ),
       ),
     );

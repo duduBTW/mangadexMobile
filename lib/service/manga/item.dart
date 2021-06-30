@@ -20,6 +20,8 @@ class MangaItemController with ChangeNotifier {
   set manga(MangaModel? manga) {
     _manga = manga;
     notifyListeners();
+
+    getChapters();
   }
 
   Map<String, List<ChapterModel>> _chapter = {};
@@ -67,10 +69,40 @@ class MangaItemController with ChangeNotifier {
       }
 
       chaps = chaps.toSet().toList();
-      chaps.sort((v2, v1) => double.parse(v1).compareTo(double.parse(v2)));
+      chaps.sort(
+          (v2, v1) => double.parse(v1).compareTo(double.tryParse(v2) ?? 0));
 
       chaptersList = chaps;
     }
+  }
+
+  Future<List<String>> getChaptersReturn(String id) async {
+    chaptersList = [];
+    if (_manga != null) {
+      List<String> chaps = [];
+      var mangaAggregate =
+          await ChaptersControllerHelper.getAggregate(http, id);
+
+      for (var volume in mangaAggregate.volumes.keys) {
+        print("volume: $volume");
+
+        if (mangaAggregate.volumes[volume]?.chapters != null) {
+          for (var chapter in mangaAggregate.volumes[volume]!.chapters.keys) {
+            if (mangaAggregate.volumes[volume]?.chapters[chapter]?.chapter !=
+                null)
+              chaps.add(
+                  mangaAggregate.volumes[volume]!.chapters[chapter]!.chapter);
+          }
+        }
+      }
+
+      chaps = chaps.toSet().toList();
+      chaps.sort((v2, v1) => double.parse(v1).compareTo(double.parse(v2)));
+
+      return chaps;
+    }
+
+    return [];
   }
 
   void getChapter(String id) async {

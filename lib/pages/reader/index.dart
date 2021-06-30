@@ -22,7 +22,7 @@ class _MangaReaderPageState extends State<MangaReaderPage> {
     // TODO: implement initState
     super.initState();
     Provider.of<MangaItemController>(context, listen: false)
-        .updateServer(widget.chapter.id);
+        .updateServer(widget.chapter.data.id);
   }
 
   @override
@@ -49,20 +49,6 @@ class MangaReader extends StatefulWidget {
 }
 
 class _MangaReaderState extends State<MangaReader> {
-  // final List<String> _images = [
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/001.jpg",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/002.jpg",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/003.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/004.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/005.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/006.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/007.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/008.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/009.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/010.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/011.png",
-  //   "https://images.catmanga.org/series/tawawa/chapters/1/012.png",
-  // ];
   final PageController _pageController = PageController();
   int currentPage = 0;
   bool open = false;
@@ -87,13 +73,13 @@ class _MangaReaderState extends State<MangaReader> {
   @override
   void didChangeDependencies() {
     try {
-      for (var page in widget.chapter.attributes.data) {
+      for (var page in widget.chapter.data.attributes.data) {
         print(
-            "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.attributes.hash}/$page");
+            "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page");
         if (page != null)
           precacheImage(
               new NetworkImage(
-                  "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.attributes.hash}/$page"),
+                  "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page"),
               context);
       }
     } catch (e) {
@@ -107,7 +93,7 @@ class _MangaReaderState extends State<MangaReader> {
     super.initState();
 
     Provider.of<MangaItemController>(context, listen: false).chapterReadingNow =
-        widget.chapter.attributes.chapter!;
+        widget.chapter.data.attributes.chapter!;
     _pageController.addListener(onPageChange);
   }
 
@@ -152,7 +138,7 @@ class _MangaReaderState extends State<MangaReader> {
 
   void _handleTapDown(TapUpDetails details) {
     print(currentPage);
-    print(widget.chapter.attributes.data.length);
+    print(widget.chapter.data.attributes.data.length);
     reset();
     if (details.globalPosition.dx < MediaQuery.of(context).size.width / 2) {
       if (currentPage != 0) {
@@ -166,10 +152,10 @@ class _MangaReaderState extends State<MangaReader> {
   }
 
   void nextPage() {
-    if (currentPage < widget.chapter.attributes.data.length) {
+    if (currentPage < widget.chapter.data.attributes.data.length) {
       print(currentPage);
-      print(widget.chapter.attributes.data.length);
-      if (currentPage == widget.chapter.attributes.data.length - 2) {
+      print(widget.chapter.data.attributes.data.length);
+      if (currentPage == widget.chapter.data.attributes.data.length - 2) {
         // get next charp data
         Provider.of<MangaItemController>(context, listen: false)
             .getNextChapter();
@@ -178,7 +164,7 @@ class _MangaReaderState extends State<MangaReader> {
         currentPage = currentPage + 1;
       });
 
-      if (currentPage == widget.chapter.attributes.data.length) {
+      if (currentPage == widget.chapter.data.attributes.data.length) {
         setState(() {
           open = true;
         });
@@ -223,7 +209,7 @@ class _MangaReaderState extends State<MangaReader> {
               //         ],
               //       ),
               //     )),
-              currentPage < widget.chapter.attributes.data.length
+              currentPage < widget.chapter.data.attributes.data.length
                   ? GestureDetector(
                       onTapUp: _handleTapDown,
                       child: InteractiveViewer(
@@ -234,7 +220,7 @@ class _MangaReaderState extends State<MangaReader> {
                           height: MediaQuery.of(context).size.height,
                           color: Colors.white,
                           child: Image.network(
-                            "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.attributes.hash}/${widget.chapter.attributes.data[currentPage]}",
+                            "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[currentPage]}",
                             // loadingBuilder: (ctx, build, event) => SizedBox(
                             //   width: 22,
                             //   height: 22,
@@ -298,7 +284,7 @@ class _MangaReaderState extends State<MangaReader> {
                           ),
                         ),
                         Text(
-                          "Chap. ${widget.chapter.attributes.chapter ?? "?"}",
+                          "Chap. ${widget.chapter.data.attributes.chapter ?? "?"}",
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ],
@@ -329,7 +315,7 @@ class _MangaReaderState extends State<MangaReader> {
                         ),
                       ),
                       Text(
-                          "${min(currentPage + 1, widget.chapter.attributes.data.length)}/${widget.chapter.attributes.data.length}"),
+                          "${min(currentPage + 1, widget.chapter.data.attributes.data.length)}/${widget.chapter.data.attributes.data.length}"),
                       IconButton(
                         onPressed: () {
                           reset();

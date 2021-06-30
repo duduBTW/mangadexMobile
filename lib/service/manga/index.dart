@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:mangadex/service/chapters/index.dart';
+import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/cover/index.dart';
 import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/manga/model/index.dart';
@@ -15,6 +17,13 @@ class MangaController with ChangeNotifier {
 
   List<MangaModel>? get recentMangas => _recentMangas;
 
+  // Recent
+  List<ChapterModel>? _recentChapters;
+  List<ChapterModel>? get recentChapters => _recentChapters;
+
+  Map<String, MangaModel>? _recentChaptersMangas;
+  Map<String, MangaModel>? get recentChaptersMangas => _recentChaptersMangas;
+
   Future<PaginationModel> getRecentMangas() async {
     // _recentMangas = await MangaControllerHelper.getRecentMangasData(http)..item1;
     var recentMangaResult = await MangaControllerHelper.getMangasData(http);
@@ -23,16 +32,50 @@ class MangaController with ChangeNotifier {
 
     return recentMangaResult.item2;
   }
+
+  Future<void> fetchRecentChapters() async {
+    _recentChapters =
+        await ChaptersControllerHelper.getGeneralLatestChapter(http);
+    notifyListeners();
+
+    var ids = _recentChapters!
+        .map((chapter) => chapter.relationships
+            .singleWhere((element) => element!['type'] == "manga")!['id']
+            .toString())
+        .toList();
+    notifyListeners();
+
+    var mangas =
+        await MangaControllerHelper.getMangasData(http, identificatiors: ids);
+
+    Map<String, MangaModel> userManTemp = {};
+    for (var i = 0; i < mangas.item1.length; i++) {
+      Map<String, MangaModel> item = {};
+      userManTemp["${mangas.item1[i].data.id}"] = mangas.item1[i];
+    }
+    _recentChaptersMangas = userManTemp;
+    notifyListeners();
+  }
 }
 
 class MangaControllerHelper {
   static Future<Tuple<List<MangaModel>, PaginationModel>> getMangasData(
-      MangadexService http,
-      {String limit = "20",
-      String? title,
-      String order = "[createdAt]=desc"}) async {
-    var response = await http.get(
-        "/manga?limit=$limit&order$order${title != null ? "&title=$title" : ""}");
+    MangadexService http, {
+    String limit = "20",
+    String? title,
+    List<String>? identificatiors,
+    String order = "[createdAt]=desc",
+  }) async {
+    var link =
+        "/manga?limit=$limit&order$order${title != null ? "&title=$title" : ""}";
+    if (identificatiors != null) {
+      int i = 0;
+      for (var id in identificatiors) {
+        link += "&ids[]=$id";
+        i++;
+      }
+    }
+    var response = await http.get(link);
 
     print(response.data['results']!
         .map((mangaItemApi) => MangaModel.fromJson(mangaItemApi))

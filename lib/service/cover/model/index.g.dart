@@ -8,7 +8,7 @@ part of 'index.dart';
 
 CoverModel _$CoverModelFromJson(Map<String, dynamic> json) {
   return CoverModel(
-    json['result'] as String,
+    json['result'] as String?,
     DataModel.fromJson(json['data'] as Map<String, dynamic>),
     (json['relationships'] as List<dynamic>)
         .map((e) => RelationshipsModel.fromJson(e as Map<String, dynamic>))

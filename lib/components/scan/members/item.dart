@@ -27,7 +27,7 @@ class MemberScan extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(leader ? 1.0 : 2.0),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           decoration: kInnerDecoration,
           child: Row(
             children: [

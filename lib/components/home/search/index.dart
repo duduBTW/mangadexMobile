@@ -95,10 +95,7 @@ class _SearchTabState extends State<SearchTab>
             ? SearchType(
                 searchValue: searchValue,
               )
-            : Expanded(
-                child: SearchPage(
-                    controller: _controller, showScrollUp: showScrollUp),
-              ),
+            : SearchPage(),
       ),
     );
   }
@@ -138,17 +135,21 @@ class _SearchInputState extends State<SearchInput> {
     widget.onChange(_textController.text);
   }
 
+  void onEditingComplete() {
+    final FocusScopeNode currentScope = FocusScope.of(context);
+    if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+      FocusManager.instance.primaryFocus!.unfocus();
+    }
+    widget.onSubmitted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40,
       padding: const EdgeInsets.only(left: 15),
       child: TextField(
-        onEditingComplete: () {
-          FocusScope.of(context).unfocus();
-          widget.onSubmitted();
-        },
-        autofocus: true,
+        onEditingComplete: onEditingComplete,
         cursorColor: Colors.black,
         controller: _textController,
         decoration: InputDecoration(

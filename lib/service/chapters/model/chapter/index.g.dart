@@ -8,13 +8,28 @@ part of 'index.dart';
 
 ChapterModel _$ChapterModelFromJson(Map<String, dynamic> json) {
   return ChapterModel(
+    ChapterDataModel.fromJson(json['data'] as Map<String, dynamic>),
+    (json['relationships'] as List<dynamic>)
+        .map((e) => e as Map<String, dynamic>?)
+        .toList(),
+  );
+}
+
+Map<String, dynamic> _$ChapterModelToJson(ChapterModel instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+      'relationships': instance.relationships,
+    };
+
+ChapterDataModel _$ChapterDataModelFromJson(Map<String, dynamic> json) {
+  return ChapterDataModel(
     json['id'] as String,
     json['type'] as String,
     ChaptersAttributes.fromJson(json['attributes'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$ChapterModelToJson(ChapterModel instance) =>
+Map<String, dynamic> _$ChapterDataModelToJson(ChapterDataModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': instance.type,
@@ -23,13 +38,13 @@ Map<String, dynamic> _$ChapterModelToJson(ChapterModel instance) =>
 
 ChaptersAttributes _$ChaptersAttributesFromJson(Map<String, dynamic> json) {
   return ChaptersAttributes(
-    json['title'] as String,
+    json['title'] as String?,
     json['volume'] as String?,
     json['chapter'] as String?,
-    json['translatedLanguage'] as String,
-    json['hash'] as String,
-    (json['data'] as List<dynamic>).map((e) => e as String).toList(),
-    (json['dataSaver'] as List<dynamic>).map((e) => e as String).toList(),
+    json['translatedLanguage'] as String?,
+    json['hash'] as String?,
+    (json['data'] as List<dynamic>).map((e) => e as String?).toList(),
+    (json['dataSaver'] as List<dynamic>).map((e) => e as String?).toList(),
     json['uploader'] as String?,
     json['version'] as int,
     json['createdAt'] as String,

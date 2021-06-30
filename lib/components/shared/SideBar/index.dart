@@ -48,7 +48,7 @@ class SideBar extends StatelessWidget {
               ),
               Text(
                 "Member",
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.caption,
               ),
               SizedBox(
                 height: 30,
@@ -76,7 +76,8 @@ class SideBar extends StatelessWidget {
                   Icons.settings,
                   color: Theme.of(context).primaryColor,
                 ),
-                onPressed: () {},
+                onPressed: () =>
+                    Navigator.of(context).pushNamed("/configuration"),
                 label: Text(
                   "Settings",
                   style: Theme.of(context).textTheme.headline3,

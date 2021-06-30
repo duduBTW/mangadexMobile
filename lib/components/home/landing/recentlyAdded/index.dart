@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/manga/index.dart';
 import 'package:mangadex/service/manga/index.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +79,8 @@ class CardManga extends StatelessWidget {
   Widget build(BuildContext context) {
     print(manga.data.coverLink);
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.of(context)
+          .pushNamed(MangaPage.routeName, arguments: manga),
       child: Container(
         width: 120,
         child: Column(

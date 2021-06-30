@@ -18,7 +18,35 @@ class ChaptersControllerHelper {
     List<ChapterModel> chaps = [];
 
     for (dynamic coverItemApi in response.data['results']) {
-      chaps.add(ChapterModel.fromJson(coverItemApi['data']));
+      print(coverItemApi);
+      chaps.add(ChapterModel.fromJson(coverItemApi));
+    }
+
+    return chaps;
+  }
+
+  static Future<List<ChapterModel>> getLatestChapter(
+      MangadexService http) async {
+    var response = await http.get(
+        "/user/follows/manga/feed?limit=30&offset=0&order[publishAt]=desc");
+
+    List<ChapterModel> chaps = [];
+
+    for (dynamic coverItemApi in response.data['results']) {
+      chaps.add(ChapterModel.fromJson(coverItemApi));
+    }
+
+    return chaps;
+  }
+
+  static Future<List<ChapterModel>> getGeneralLatestChapter(
+      MangadexService http) async {
+    var response = await http.get("/chapter?limit=20&order[publishAt]=desc");
+
+    List<ChapterModel> chaps = [];
+
+    for (dynamic coverItemApi in response.data['results']) {
+      chaps.add(ChapterModel.fromJson(coverItemApi));
     }
 
     return chaps;

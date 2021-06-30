@@ -110,9 +110,8 @@ class LoginControllerHelper {
     var revalidate = await storage.read(key: 'refreshToken');
 
     if (revalidate == null) {
-      throw "refreshToken not found";
+      return "";
     }
-    print(revalidate);
 
     try {
       Dio _dio = new Dio();

@@ -4,16 +4,29 @@ part 'index.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ChapterModel {
-  final String id;
-  final String type;
-  final ChaptersAttributes attributes;
+  final ChapterDataModel data;
+  final List<Map<String, dynamic>?> relationships;
 
-  ChapterModel(this.id, this.type, this.attributes);
+  ChapterModel(this.data, this.relationships);
 
   factory ChapterModel.fromJson(Map<String, dynamic> data) =>
       _$ChapterModelFromJson(data);
 
   Map<String, dynamic> toJson() => _$ChapterModelToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ChapterDataModel {
+  final String id;
+  final String type;
+  final ChaptersAttributes attributes;
+
+  ChapterDataModel(this.id, this.type, this.attributes);
+
+  factory ChapterDataModel.fromJson(Map<String, dynamic> data) =>
+      _$ChapterDataModelFromJson(data);
+
+  Map<String, dynamic> toJson() => _$ChapterDataModelToJson(this);
 }
 
 @JsonSerializable()

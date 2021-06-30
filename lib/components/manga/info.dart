@@ -74,19 +74,23 @@ class _MangaInfoState extends State<MangaInfo> {
                 style: Theme.of(context).textTheme.headline1,
               ),
             ),
-            ExpandablePageView(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              itemCount: manga.data.attributes.altTitles.length,
-              itemBuilder: (ctx, index) => Padding(
-                padding: const EdgeInsets.only(
-                    top: 10, right: 30, left: 30, bottom: 30),
-                child: Text(
-                  manga.data.attributes.altTitles[index]['en']!,
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ),
-            ),
+            manga.data.attributes.altTitles.length > 0
+                ? ExpandablePageView(
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    itemCount: manga.data.attributes.altTitles.length,
+                    itemBuilder: (ctx, index) => Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, right: 30, left: 30, bottom: 30),
+                      child: Text(
+                        manga.data.attributes.altTitles[index]['en'] ?? "Teste",
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 30,
+                  ),
             Padding(
               padding: const EdgeInsets.only(
                   top: 0, bottom: 30, right: 30, left: 30),
