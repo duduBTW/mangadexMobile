@@ -67,12 +67,12 @@ class MangaController with ChangeNotifier {
 
 class MangaControllerHelper {
   static Future<Tuple<List<MangaModel>, PaginationModel>> getMangasData(
-    MangadexService http, {
-    String limit = "20",
-    String? title,
-    List<String>? identificatiors,
-    String order = "[createdAt]=desc",
-  }) async {
+      MangadexService http,
+      {String limit = "20",
+      String? title,
+      List<String>? identificatiors,
+      String order = "[createdAt]=desc",
+      bool considerContentRating = true}) async {
     var link =
         "/manga?limit=$limit&order$order${title != null ? "&title=$title" : ""}";
     if (identificatiors != null) {
@@ -82,7 +82,9 @@ class MangaControllerHelper {
         i++;
       }
     }
-    link = await ChaptersControllerHelper.getTContentRatingUrl(link);
+    if (considerContentRating) {
+      link = await ChaptersControllerHelper.getTContentRatingUrl(link);
+    }
     var response = await http.get(link);
 
     print(response.data['results']!

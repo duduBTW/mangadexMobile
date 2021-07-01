@@ -38,6 +38,7 @@ dependencies:
   multi_select_flutter: ^4.0.0
   material_floating_search_bar: ^0.3.4
   page_transition: ^2.0.2
+  cached_network_image: ^3.0.0
 
 dev_dependencies:
   flutter_test:

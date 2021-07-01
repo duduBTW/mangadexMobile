@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:page_transition/page_transition.dart';
 
+import 'chache/index.dart';
 import 'choices.dart';
 import 'count/index.dart';
 import 'dart:convert';
@@ -230,6 +231,30 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 5, right: 15),
                       child: Text("Set load counts."),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () => Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: CacheConfiguration())),
+                    leading: SizedBox(
+                      width: 65,
+                      child: Align(
+                        child: Icon(
+                          Icons.cached_rounded,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        alignment: Alignment(0, 0),
+                      ),
+                    ),
+                    title: Text("Cache"),
+                    contentPadding: EdgeInsets.all(15),
+                    visualDensity: VisualDensity.standard,
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 5, right: 15),
+                      child: Text("..."),
                     ),
                   ),
                   Divider(

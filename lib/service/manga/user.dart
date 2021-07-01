@@ -143,7 +143,9 @@ class UserMangaController with ChangeNotifier {
       ids = ids.toSet().toList();
 
       var mangas = await MangaControllerHelper.getMangasData(http,
-          identificatiors: ids, limit: perpage.toString());
+          identificatiors: ids,
+          limit: ids.length.toString(),
+          considerContentRating: false);
 
       Map<String, MangaModel> userManTemp = {};
       for (var i = 0; i < mangas.item1.length; i++) {

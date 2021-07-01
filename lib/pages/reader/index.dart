@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mangadex/components/shared/chapters/index.dart';
 import 'package:mangadex/pages/configuration/reader/index.dart';
 import 'package:mangadex/pages/reader/standard/index.dart';
+import 'package:mangadex/pages/reader/swipe/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,6 @@ class MangaReaderPage extends StatefulWidget {
 class _MangaReaderPageState extends State<MangaReaderPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<MangaItemController>(context, listen: false)
         .updateServer(widget.chapter.data.id);
@@ -66,6 +66,25 @@ class _MangaReaderState extends State<MangaReader> {
     getDefData();
   }
 
+  /// Did Change Dependencies
+  // @override
+  // void didChangeDependencies() {
+  //   try {
+  //     for (var page in widget.chapter.data.attributes.data) {
+  //       print(
+  //           "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page");
+  //       if (page != null)
+  //         precacheImage(
+  //             new NetworkImage(
+  //                 "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page"),
+  //             context);
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //   super.didChangeDependencies();
+  // }
+
   void getDefData() async {
     var newValue = await storage.read(key: 'DEF_READ_TYPE');
 
@@ -90,7 +109,9 @@ class _MangaReaderState extends State<MangaReader> {
       StandardMangaReader(
         chapter: widget.chapter,
       ),
-      Container(child: Text("Working on it -.-")),
+      SwipeStripReader(
+        chapter: widget.chapter,
+      ),
       LongStripReader(
         chapter: widget.chapter,
       )

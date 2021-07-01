@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
@@ -35,25 +36,6 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
         currentPage = _pageController.page!.toInt();
       });
     }
-  }
-
-  /// Did Change Dependencies
-  @override
-  void didChangeDependencies() {
-    try {
-      for (var page in widget.chapter.data.attributes.data) {
-        print(
-            "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page");
-        if (page != null)
-          precacheImage(
-              new NetworkImage(
-                  "${Provider.of<MangaItemController>(context, listen: false).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page"),
-              context);
-      }
-    } catch (e) {
-      print(e);
-    }
-    super.didChangeDependencies();
   }
 
   @override
@@ -156,27 +138,49 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
                   child: Container(
                     height: MediaQuery.of(context).size.height,
                     color: Colors.white,
-                    child: Image.network(
-                      "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[currentPage]}",
-                      // loadingBuilder: (ctx, build, event) => SizedBox(
-                      //   width: 22,
-                      //   height: 22,
-                      //   child: CircularProgressIndicator(),
-                      // ),
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
+                    child: CachedNetworkImage(
+                      key: UniqueKey(),
+                      imageUrl: widget
+                                  .chapter.data.attributes.data[currentPage] !=
+                              null
+                          ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[currentPage]}"
+                          : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
+                      width: MediaQuery.of(context).size.width,
+                      progressIndicatorBuilder: (ctx, url, loadingProgress) {
+                        // if (loadingProgress == null) return child;
+
+                        return Container(
+                          height: MediaQuery.of(context).size.height,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).primaryColor,
+                              value: loadingProgress.progress,
+                            ),
                           ),
                         );
                       },
                     ),
+                    // child: Image.network(
+                    //   "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[currentPage]}",
+                    //   // loadingBuilder: (ctx, build, event) => SizedBox(
+                    //   //   width: 22,
+                    //   //   height: 22,
+                    //   //   child: CircularProgressIndicator(),
+                    //   // ),
+                    //   loadingBuilder: (BuildContext context, Widget child,
+                    //       ImageChunkEvent? loadingProgress) {
+                    //     if (loadingProgress == null) return child;
+                    //     return Center(
+                    //       child: CircularProgressIndicator(
+                    //         color: Theme.of(context).primaryColor,
+                    //         value: loadingProgress.expectedTotalBytes != null
+                    //             ? loadingProgress.cumulativeBytesLoaded /
+                    //                 loadingProgress.expectedTotalBytes!
+                    //             : null,
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     alignment: Alignment(0, 0),
                   ),
                 ),
