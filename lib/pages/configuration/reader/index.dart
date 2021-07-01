@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MangaReaderConfiguration extends StatefulWidget {
   const MangaReaderConfiguration({Key? key}) : super(key: key);
+  static final List<String> options = ["Standard", "Swipe", "Long Strip"];
 
   @override
   _MangaReaderConfigurationState createState() =>
@@ -9,7 +11,11 @@ class MangaReaderConfiguration extends StatefulWidget {
 }
 
 class _MangaReaderConfigurationState extends State<MangaReaderConfiguration> {
-  final List<String> options = ["Standard", "Swipe", "Long Strip"];
+  static final storage = new FlutterSecureStorage();
+
+  // static final List<String> options = ["Standard", "Swipe", "Long Strip"];
+
+  List<String> options = MangaReaderConfiguration.options;
   List<Widget> optionsContent = [
     StandardMangaConfigs(),
     Column(
@@ -22,10 +28,28 @@ class _MangaReaderConfigurationState extends State<MangaReaderConfiguration> {
 
   String selected = "Standard";
 
+  @override
+  void initState() {
+    super.initState();
+    getDefData();
+  }
+
+  void getDefData() async {
+    var newValue = await storage.read(key: 'DEF_READ_TYPE');
+
+    if (newValue != null) {
+      setState(() {
+        selected = newValue;
+      });
+    }
+  }
+
   void setSelected(String newValue) {
     setState(() {
       selected = newValue;
     });
+
+    storage.write(key: 'DEF_READ_TYPE', value: newValue);
   }
 
   @override

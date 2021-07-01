@@ -68,7 +68,7 @@ class _MangaShowState extends State<MangaShow> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.manga.data.attributes.title['en']!,
+                    widget.manga.data.attributes.title['en'] ?? "",
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   SizedBox(
@@ -108,8 +108,9 @@ class _MangaShowState extends State<MangaShow> {
                                   height: 15,
                                 ),
                                 Text(
-                                  widget
-                                      .manga.data.attributes.description['en']!,
+                                  widget.manga.data.attributes
+                                          .description['en'] ??
+                                      "",
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 14, height: 1.25),
@@ -191,7 +192,7 @@ class _MangaShowState extends State<MangaShow> {
                         ),
                         width: 125,
                         child: Text(
-                          widget.manga.data.attributes.status!,
+                          widget.manga.data.attributes.status ?? "",
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               letterSpacing: 1,

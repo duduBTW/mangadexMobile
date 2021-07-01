@@ -82,6 +82,7 @@ class MangaControllerHelper {
         i++;
       }
     }
+    link = await ChaptersControllerHelper.getTContentRatingUrl(link);
     var response = await http.get(link);
 
     print(response.data['results']!
