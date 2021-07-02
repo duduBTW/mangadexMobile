@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mangadex/service/chapters/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/cover/index.dart';
@@ -9,8 +10,29 @@ import 'model/index.dart';
 
 class MangaItemController with ChangeNotifier {
   late final MangadexService http;
+  static final storage = new FlutterSecureStorage();
 
   MangaItemController(this.http);
+
+  // Manga reader mode
+  String? _selected;
+  String? get selected => _selected;
+  set selected(String? selected) {
+    _selected = selected;
+    notifyListeners();
+  }
+
+  void getDefData() async {
+    var newValue = await storage.read(key: 'DEF_READ_TYPE');
+
+    if (newValue != null) {
+      selected = newValue;
+      return;
+    }
+
+    selected = "Standard";
+  }
+  ////
 
   String? _serverUrl;
   String? get serverUrl => _serverUrl;

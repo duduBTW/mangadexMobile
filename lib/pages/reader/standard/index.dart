@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/configuration/reader/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../index.dart';
@@ -85,17 +87,24 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
     print(widget.chapter.data.attributes.data.length);
     reset();
     if (details.globalPosition.dx < MediaQuery.of(context).size.width / 2) {
-      if (currentPage != 0) {
-        setState(() {
-          currentPage = currentPage - 1;
-        });
-      }
+      previusPage();
     } else {
       nextPage();
     }
   }
 
+  void previusPage() {
+    reset();
+
+    if (currentPage != 0) {
+      setState(() {
+        currentPage = currentPage - 1;
+      });
+    }
+  }
+
   void nextPage() {
+    reset();
     if (currentPage < widget.chapter.data.attributes.data.length) {
       print(currentPage);
       print(widget.chapter.data.attributes.data.length);
@@ -187,54 +196,76 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
               )
             : ChapFinished(),
         HederMangaReader(
-          open: open,
           title: title,
+          open: open,
           chapter: widget.chapter,
         ),
-        AnimatedPositioned(
-          duration: Duration(milliseconds: 200),
-          child: Container(
-            // padding: EdgeInsets.symmetric(vertical: 20),
-            color: Colors.white.withOpacity(0.8),
-            // height: 80,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    reset();
-                    if (currentPage != 0) {
-                      setState(() {
-                        currentPage = currentPage - 1;
-                      });
-                    }
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    size: 12,
-                  ),
-                ),
-                Text(
-                    "${min(currentPage + 1, widget.chapter.data.attributes.data.length)}/${widget.chapter.data.attributes.data.length}"),
-                IconButton(
-                  onPressed: () {
-                    reset();
-                    nextPage();
-                  },
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          bottom: open ? 0 : -60,
-          left: 0,
-          right: 0,
+        CurrentPageMangaReader(
+          open: open,
+          chapter: widget.chapter,
+          currentPage: currentPage,
+          nextPage: nextPage,
+          previusPage: previusPage,
         )
       ],
+    );
+  }
+}
+
+class CurrentPageMangaReader extends StatelessWidget {
+  final bool open;
+  final int currentPage;
+  final ChapterModel chapter;
+  final Function nextPage;
+  final Function previusPage;
+
+  const CurrentPageMangaReader(
+      {Key? key,
+      required this.open,
+      required this.currentPage,
+      required this.chapter,
+      required this.nextPage,
+      required this.previusPage})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      duration: Duration(milliseconds: 200),
+      child: Container(
+        // padding: EdgeInsets.symmetric(vertical: 20),
+        color: Colors.white.withOpacity(0.8),
+        // height: 80,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {
+                previusPage();
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 12,
+              ),
+            ),
+            Text(
+                "${min(currentPage + 1, chapter.data.attributes.data.length)}/${chapter.data.attributes.data.length}"),
+            IconButton(
+              onPressed: () {
+                nextPage();
+              },
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                size: 12,
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottom: open ? 0 : -60,
+      left: 0,
+      right: 0,
     );
   }
 }
@@ -294,6 +325,18 @@ class HederMangaReader extends StatelessWidget {
                 "Chap. ${chapter.data.attributes.chapter ?? "?"}",
                 style: Theme.of(context).textTheme.caption,
               ),
+              IconButton(
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(
+                    Icons.settings,
+                    color: Color(0xff3F0000),
+                    size: 20,
+                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: MangaReaderConfiguration()))),
             ],
           ),
         ));

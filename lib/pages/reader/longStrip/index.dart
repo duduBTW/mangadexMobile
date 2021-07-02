@@ -5,7 +5,7 @@ import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:provider/provider.dart';
 
-import '../index.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class LongStripReader extends StatefulWidget {
   final ChapterModel chapter;
@@ -16,7 +16,8 @@ class LongStripReader extends StatefulWidget {
 }
 
 class _LongStripReaderState extends State<LongStripReader> {
-  get currentPage => null;
+  // get currentPage => 1;
+  int currentPage = 0;
 
   bool open = false;
 
@@ -29,7 +30,23 @@ class _LongStripReaderState extends State<LongStripReader> {
   @override
   void initState() {
     super.initState();
-    // Provider.of<MangaItemController>(context, listen: false).getNextChapter();
+    Provider.of<MangaItemController>(context, listen: false).getNextChapter();
+  }
+
+  void onVisibilityChanged(VisibilityInfo visibilityInfo, int i) {
+    var visiblePercentage = visibilityInfo.visibleFraction * 100;
+    // print(visibilityInfo.visibleBounds);
+
+    // print(int.parse(visibilityInfo.key.toString()));
+
+    if (visiblePercentage == 100 && currentPage != i) {
+      //the magic is done here
+      //
+      setState(() {
+        currentPage = i;
+      });
+    }
+    debugPrint('Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
   }
 
   @override
@@ -51,97 +68,45 @@ class _LongStripReaderState extends State<LongStripReader> {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               itemCount: widget.chapter.data.attributes.data.length,
-              itemBuilder: (ctx, i) => CachedNetworkImage(
-                key: UniqueKey(),
-                imageUrl: widget.chapter.data.attributes.data[i] != null
-                    ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
-                    : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
-                width: MediaQuery.of(context).size.width,
-                progressIndicatorBuilder: (ctx, url, loadingProgress) {
-                  // if (loadingProgress == null) return child;
+              itemBuilder: (ctx, i) => VisibilityDetector(
+                key: Key(i.toString()),
+                onVisibilityChanged: (v) => onVisibilityChanged(v, i),
+                child: CachedNetworkImage(
+                  key: UniqueKey(),
+                  imageUrl: widget.chapter.data.attributes.data[i] != null
+                      ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
+                      : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
+                  width: MediaQuery.of(context).size.width,
+                  progressIndicatorBuilder: (ctx, url, loadingProgress) {
+                    // if (loadingProgress == null) return child;
 
-                  return Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
-                        value: loadingProgress.progress,
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.75,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                          value: loadingProgress.progress,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-              // itemBuilder: (ctx, i) => Image.network(
-              //   widget.chapter.data.attributes.data[i] != null
-              //       ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
-              //       : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
-              // //   width: MediaQuery.of(context).size.width,
-              //   loadingBuilder: (BuildContext context, Widget child,
-              //       ImageChunkEvent? loadingProgress) {
-              //     if (loadingProgress == null) return child;
-              //     return Container(
-              //       height: MediaQuery.of(context).size.height,
-              //       child: Center(
-              //         child: CircularProgressIndicator(
-              //           color: Theme.of(context).primaryColor,
-              //           value: loadingProgress.expectedTotalBytes != null
-              //               ? loadingProgress.cumulativeBytesLoaded /
-              //                   loadingProgress.expectedTotalBytes!
-              //               : null,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
             ),
           ),
         ),
-        // SingleChildScrollView(
-        //     child: GestureDetector(
-        //   onDoubleTap: onTapScreen,
-        //   child: Container(
-        //     child: Column(
-        //       children: [
-        //         ...widget.chapter.data.attributes.data
-        // .map((page) => Container(
-        //       width: MediaQuery.of(context).size.width,
-        //       color: Colors.white,
-        //       child: Image.network(
-        //         page != null
-        //             ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/$page"
-        //             : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
-        //         loadingBuilder: (BuildContext context, Widget child,
-        //             ImageChunkEvent? loadingProgress) {
-        //           if (loadingProgress == null) return child;
-        //           return Container(
-        //             height: MediaQuery.of(context).size.height,
-        //             child: Center(
-        //               child: CircularProgressIndicator(
-        //                 color: Theme.of(context).primaryColor,
-        //                 value: loadingProgress.expectedTotalBytes !=
-        //                         null
-        //                     ? loadingProgress
-        //                             .cumulativeBytesLoaded /
-        //                         loadingProgress.expectedTotalBytes!
-        //                     : null,
-        //               ),
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //       alignment: Alignment(0, 0),
-        //     ))
-        //             .toList(),
-        //         ChapFinished()
-        //       ],
-        //     ),
-        //   ),
-        // )),
         HederMangaReader(
           open: open,
           title: title,
           chapter: widget.chapter,
         ),
+        CurrentPageMangaReader(
+          open: open,
+          chapter: widget.chapter,
+          currentPage: currentPage,
+          nextPage: () {},
+          previusPage: () {},
+        )
       ],
     );
   }

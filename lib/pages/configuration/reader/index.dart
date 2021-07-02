@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mangadex/service/manga/item.dart';
+import 'package:provider/provider.dart';
 
 class MangaReaderConfiguration extends StatefulWidget {
   const MangaReaderConfiguration({Key? key}) : super(key: key);
@@ -26,34 +28,29 @@ class _MangaReaderConfigurationState extends State<MangaReaderConfiguration> {
     ),
   ];
 
-  String selected = "Standard";
+  // String selected = "Standard";
 
   @override
   void initState() {
     super.initState();
-    getDefData();
-  }
-
-  void getDefData() async {
-    var newValue = await storage.read(key: 'DEF_READ_TYPE');
-
-    if (newValue != null) {
-      setState(() {
-        selected = newValue;
-      });
-    }
+    Provider.of<MangaItemController>(context, listen: false).getDefData();
   }
 
   void setSelected(String newValue) {
-    setState(() {
-      selected = newValue;
-    });
+    Provider.of<MangaItemController>(context, listen: false).selected =
+        newValue;
 
     storage.write(key: 'DEF_READ_TYPE', value: newValue);
   }
 
   @override
   Widget build(BuildContext context) {
+    var selected = Provider.of<MangaItemController>(context).selected;
+    if (selected == null)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

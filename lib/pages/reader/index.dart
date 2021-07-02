@@ -56,14 +56,11 @@ class MangaReader extends StatefulWidget {
 }
 
 class _MangaReaderState extends State<MangaReader> {
-  static final storage = new FlutterSecureStorage();
-
   List<String> options = MangaReaderConfiguration.options;
-  String? selected;
   @override
   void initState() {
     super.initState();
-    getDefData();
+    Provider.of<MangaItemController>(context, listen: false).getDefData();
   }
 
   /// Did Change Dependencies
@@ -85,24 +82,9 @@ class _MangaReaderState extends State<MangaReader> {
   //   super.didChangeDependencies();
   // }
 
-  void getDefData() async {
-    var newValue = await storage.read(key: 'DEF_READ_TYPE');
-
-    if (newValue != null) {
-      setState(() {
-        selected = newValue;
-      });
-
-      return;
-    }
-
-    setState(() {
-      selected = "Standard";
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var selected = Provider.of<MangaItemController>(context).selected;
     if (selected == null) return Container();
 
     List<Widget> readers = [

@@ -234,8 +234,8 @@ class ChapItem extends StatelessWidget {
                       child: Text(
                         charItem.data.attributes.title == null ||
                                 charItem.data.attributes.title == ""
-                            ? charItem.data.attributes.chapter!
-                            : charItem.data.attributes.title!,
+                            ? charItem.data.attributes.chapter ?? ""
+                            : charItem.data.attributes.title ?? "",
                         style: GoogleFonts.rubik(
                             fontSize: 14, fontWeight: FontWeight.w500),
                         overflow: TextOverflow.ellipsis,

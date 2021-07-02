@@ -16,7 +16,8 @@ class SwipeStripReader extends StatefulWidget {
 }
 
 class _SwipeStripReaderState extends State<SwipeStripReader> {
-  get currentPage => null;
+  int currentPage = 0;
+  final PageController _pageController = PageController();
 
   bool open = false;
 
@@ -29,7 +30,13 @@ class _SwipeStripReaderState extends State<SwipeStripReader> {
   @override
   void initState() {
     super.initState();
-    // Provider.of<MangaItemController>(context, listen: false).getNextChapter();
+    // _pageController.addListener(onPageChange);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,6 +55,12 @@ class _SwipeStripReaderState extends State<SwipeStripReader> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: (newPge) {
+                setState(() {
+                  currentPage = newPge;
+                });
+              },
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               itemCount: widget.chapter.data.attributes.data.length,
@@ -85,6 +98,18 @@ class _SwipeStripReaderState extends State<SwipeStripReader> {
           title: title,
           chapter: widget.chapter,
         ),
+        CurrentPageMangaReader(
+          open: open,
+          chapter: widget.chapter,
+          currentPage: currentPage,
+          nextPage: () {
+            _pageController.jumpTo(10);
+            // setState(() {
+            //   currentPage = currentPage + 1;
+            // });
+          },
+          previusPage: () {},
+        )
       ],
     );
   }
