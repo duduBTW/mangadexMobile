@@ -7,6 +7,7 @@ import 'package:mangadex/pages/manga/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:mangadex/service/manga/user.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 import 'package:provider/provider.dart';
 
 class FollowsChapters extends StatelessWidget {
@@ -16,12 +17,14 @@ class FollowsChapters extends StatelessWidget {
         Provider.of<UserMangaController>(context).chapterPageController;
     var userChaptersMangas =
         Provider.of<UserMangaController>(context).userChaptersMangas;
+    var userScans = Provider.of<UserMangaController>(context).userChaptersScans;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: FollowChaptersPaginated(
         pagingController: pagingController,
         mangas: userChaptersMangas,
+        scans: userScans,
       ),
     );
   }
@@ -30,8 +33,9 @@ class FollowsChapters extends StatelessWidget {
 class FollowChaptersPaginated extends StatelessWidget {
   final PagingController<int, ChapterModel> pagingController;
   final Map<String, MangaModel>? mangas;
+  final Map<String, ScanlationGroupDataModel>? scans;
   const FollowChaptersPaginated(
-      {Key? key, required this.pagingController, this.mangas})
+      {Key? key, required this.pagingController, this.mangas, this.scans})
       : super(key: key);
 
   @override
@@ -50,6 +54,8 @@ class FollowChaptersPaginated extends StatelessWidget {
           pagingController: pagingController,
           builderDelegate: PagedChildBuilderDelegate<ChapterModel>(
               itemBuilder: (context, itemChapter, i) {
+                var scanId = itemChapter.relationships.firstWhere(
+                    (element) => element!['type'] == "scanlation_group")!['id'];
                 var mangaId = itemChapter.relationships.singleWhere(
                     (element) => element!['type'] == "manga")!['id'];
 
@@ -59,6 +65,7 @@ class FollowChaptersPaginated extends StatelessWidget {
                         (element) => element!['type'] == "manga")!['id'];
 
                 return MangaChapItem(
+                  scan: scans?["$scanId"],
                   manga: mangas?["$mangaId"],
                   charItem: itemChapter,
                   showChapLabel: i == 0 ||
@@ -145,6 +152,7 @@ class ChapterList extends StatelessWidget {
 
 class MangaChapItem extends StatelessWidget {
   final MangaModel? manga;
+  final ScanlationGroupDataModel? scan;
 
   final ChapterModel charItem;
 
@@ -156,7 +164,8 @@ class MangaChapItem extends StatelessWidget {
       required this.showHeader,
       required this.showChapLabel,
       required this.manga,
-      required this.charItem})
+      required this.charItem,
+      this.scan})
       : super(key: key);
 
   @override
@@ -181,6 +190,7 @@ class MangaChapItem extends StatelessWidget {
           height: 15,
         ),
         ChapItem(
+          scan: scan,
           popOnOpen: false,
           charItem: charItem,
           manga: manga,

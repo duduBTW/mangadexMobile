@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 
 class HeaderScan extends StatelessWidget {
-  final String name;
+  final ScanlationGroupDataModel scan;
 
-  const HeaderScan(this.name);
+  const HeaderScan(this.scan);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class HeaderScan extends StatelessWidget {
               color: theme.primaryColor,
               size: 24,
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         SizedBox(
@@ -33,7 +34,7 @@ class HeaderScan extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  name,
+                  scan.attributes.name,
                   style: theme.textTheme.headline1,
                 ),
               ),

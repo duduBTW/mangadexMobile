@@ -87,10 +87,6 @@ class MangaControllerHelper {
     }
     var response = await http.get(link);
 
-    print(response.data['results']!
-        .map((mangaItemApi) => MangaModel.fromJson(mangaItemApi))
-        .toList());
-
     List<MangaModel> mangas = [];
     List<String> ids = [];
 
@@ -113,6 +109,15 @@ class MangaControllerHelper {
           offset: response.data['offset'],
           total: response.data['total'],
         ));
+  }
+
+  static Future<MangaModel> getSingleManga(
+      MangadexService http, MangaModel manga) async {
+    var link =
+        "/manga/${manga.data.id}?includes[]=artist&includes[]=author&includes[]=cover_art";
+    var response = await http.get(link);
+
+    return MangaModel.fromJson(response.data);
   }
 
   static Future<Tuple<List<MangaModel>, PaginationModel>> getUserMangasData(

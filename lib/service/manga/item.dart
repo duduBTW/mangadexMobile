@@ -4,9 +4,20 @@ import 'package:mangadex/service/chapters/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/cover/index.dart';
 import 'package:mangadex/service/cover/model/index.dart';
+import 'package:mangadex/service/manga/index.dart';
 
 import '../http.dart';
 import 'model/index.dart';
+
+enum ReagingDirection {
+  leftToRight,
+  RightToLeft,
+}
+
+enum PageFit {
+  width,
+  height,
+}
 
 class MangaItemController with ChangeNotifier {
   late final MangadexService http;
@@ -14,6 +25,7 @@ class MangaItemController with ChangeNotifier {
 
   MangaItemController(this.http);
 
+  // Configuration
   // Manga reader mode
   String? _selected;
   String? get selected => _selected;
@@ -31,7 +43,35 @@ class MangaItemController with ChangeNotifier {
     }
 
     selected = "Standard";
+
+    var newValueZoom = await storage.read(key: 'DEF_READ_ZOOM');
+
+    if (newValueZoom != null) {
+      zoom = newValueZoom == "1";
+      return;
+    }
+
+    if (selected != "Swipe") {
+      zoom = true;
+    }
   }
+
+  //Direction
+  ReagingDirection _direction = ReagingDirection.leftToRight;
+  ReagingDirection get direction => _direction;
+  set direction(ReagingDirection direction) {
+    _direction = direction;
+    notifyListeners();
+  }
+
+  //Zoom
+  bool _zoom = true;
+  bool get zoom => _zoom;
+  set zoom(bool zoom) {
+    _zoom = zoom;
+    notifyListeners();
+  }
+
   ////
 
   String? _serverUrl;
@@ -44,6 +84,14 @@ class MangaItemController with ChangeNotifier {
     notifyListeners();
 
     getChapters();
+    getSingleManga(manga);
+  }
+
+  void getSingleManga(MangaModel? newManga) async {
+    if (newManga != null) {
+      _manga = await MangaControllerHelper.getSingleManga(http, newManga);
+      notifyListeners();
+    }
   }
 
   Map<String, List<ChapterModel>> _chapter = {};

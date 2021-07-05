@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/scan/header.dart';
 import 'package:mangadex/components/scan/members/index.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 
 class ScanPage extends StatelessWidget {
-  final String name = "Black Stray Cat Scans";
+  static String routeName = "/scan/group";
+  // final String name = "Black Stray Cat Scans";
+
+  final ScanlationGroupDataModel scan;
+
+  const ScanPage({Key? key, required this.scan}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -16,7 +22,12 @@ class ScanPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [HeaderScan(name), MembersScan()],
+              children: [
+                HeaderScan(scan),
+                MembersScan(
+                  scan: scan,
+                )
+              ],
             ),
           ),
         ),

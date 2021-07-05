@@ -4,6 +4,7 @@ import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/shared/manga/tags.dart';
+import 'package:mangadex/service/author/model/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:provider/provider.dart';
@@ -41,33 +42,9 @@ class _MangaInfoState extends State<MangaInfo> {
         children: [
           Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Author",
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text("Inoue Koharu"),
-                ],
-              ),
+              AuthorLabel(),
               Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Artist",
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text("Inoue Koharu"),
-                ],
-              ),
+              ArtistLabel(),
               Spacer(),
             ],
           ),
@@ -191,6 +168,72 @@ class _MangaInfoState extends State<MangaInfo> {
             : Color(0xFFD8D8D8),
         borderRadius: BorderRadius.circular(5),
       ),
+    );
+  }
+}
+
+class AuthorLabel extends StatelessWidget {
+  const AuthorLabel({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, dynamic>? author = Provider.of<MangaItemController>(context)
+        .manga
+        ?.relationships
+        .firstWhere((relationship) => relationship.type == "author")
+        .attributes;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Author",
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        author == null
+            ? SizedBox(
+                child: LinearProgressIndicator(),
+                width: 30,
+              )
+            : Text(author['name'])
+      ],
+    );
+  }
+}
+
+class ArtistLabel extends StatelessWidget {
+  const ArtistLabel({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, dynamic>? artist = Provider.of<MangaItemController>(context)
+        .manga
+        ?.relationships
+        .firstWhere((relationship) => relationship.type == "artist")
+        .attributes;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Artist",
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        artist == null
+            ? SizedBox(
+                child: LinearProgressIndicator(),
+                width: 30,
+              )
+            : Text(artist['name'])
+      ],
     );
   }
 }

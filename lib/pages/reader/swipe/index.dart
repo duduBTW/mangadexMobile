@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mangadex/pages/reader/standard/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
@@ -41,6 +42,8 @@ class _SwipeStripReaderState extends State<SwipeStripReader> {
 
   @override
   Widget build(BuildContext context) {
+    var zoom = Provider.of<MangaItemController>(context).zoom;
+    var direction = Provider.of<MangaItemController>(context).direction;
     var title = Provider.of<MangaItemController>(context)
             .manga
             ?.data
@@ -53,8 +56,9 @@ class _SwipeStripReaderState extends State<SwipeStripReader> {
         GestureDetector(
           onDoubleTap: onTapScreen,
           child: Container(
-            width: MediaQuery.of(context).size.width,
             child: PageView.builder(
+              // scrollDirection: Axis.vertical,
+              reverse: direction == ReagingDirection.RightToLeft,
               controller: _pageController,
               onPageChanged: (newPge) {
                 setState(() {
@@ -64,31 +68,34 @@ class _SwipeStripReaderState extends State<SwipeStripReader> {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               itemCount: widget.chapter.data.attributes.data.length,
-              itemBuilder: (ctx, i) => CachedNetworkImage(
-                key: UniqueKey(),
-                imageUrl: widget.chapter.data.attributes.data[i] != null
-                    ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
-                    : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
-                width: MediaQuery.of(context).size.width,
-                progressIndicatorBuilder: (ctx, url, loadingProgress) {
-                  // if (loadingProgress.totalSize == loadingProgress.downloaded)
-                  //   return Container(
-                  //     height: MediaQuery.of(context).size.height,
-                  //     child: Center(
-                  //       child: Icon(Icons.done),
-                  //     ),
-                  //   );
+              itemBuilder: (ctx, i) => InteractiveViewer(
+                scaleEnabled: zoom,
+                child: CachedNetworkImage(
+                  key: UniqueKey(),
+                  imageUrl: widget.chapter.data.attributes.data[i] != null
+                      ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
+                      : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
+                  width: MediaQuery.of(context).size.width,
+                  progressIndicatorBuilder: (ctx, url, loadingProgress) {
+                    // if (loadingProgress.totalSize == loadingProgress.downloaded)
+                    //   return Container(
+                    //     height: MediaQuery.of(context).size.height,
+                    //     child: Center(
+                    //       child: Icon(Icons.done),
+                    //     ),
+                    //   );
 
-                  return Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
-                        value: loadingProgress.progress,
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                          value: loadingProgress.progress,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),

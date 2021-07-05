@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mangadex/pages/configuration/reader/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
@@ -21,10 +22,23 @@ class StandardMangaReader extends StatefulWidget {
 
 class _StandardMangaReaderState extends State<StandardMangaReader> {
   final PageController _pageController = PageController();
+  static final storage = new FlutterSecureStorage();
+
   int currentPage = 0;
   bool open = false;
+
   final TransformationController _transformationController =
       TransformationController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    Provider.of<MangaItemController>(context, listen: false).chapterReadingNow =
+        widget.chapter.data.attributes.chapter!;
+    _pageController.addListener(onPageChange);
+  }
+
   void onPageChange() {
     // TODO
 
@@ -38,15 +52,6 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
         currentPage = _pageController.page!.toInt();
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    Provider.of<MangaItemController>(context, listen: false).chapterReadingNow =
-        widget.chapter.data.attributes.chapter!;
-    _pageController.addListener(onPageChange);
   }
 
   @override
@@ -127,6 +132,7 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
 
   @override
   Widget build(BuildContext context) {
+    var zoom = Provider.of<MangaItemController>(context).zoom;
     var title = Provider.of<MangaItemController>(context)
             .manga
             ?.data
@@ -141,6 +147,7 @@ class _StandardMangaReaderState extends State<StandardMangaReader> {
                 onDoubleTap: onTapScreen,
                 onTapUp: _handleTapDown,
                 child: InteractiveViewer(
+                  scaleEnabled: zoom,
                   transformationController: _transformationController,
                   minScale: 1,
                   maxScale: 3,

@@ -97,8 +97,8 @@ class _LandingState extends State<Landing> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(30),
             child: Material(
-              child: MangaSearch(),
-              // child: SearchPage(),
+              // child: MangaSearch(),
+              child: SearchPage(),
               color: Theme.of(context).backgroundColor,
             ),
           ),

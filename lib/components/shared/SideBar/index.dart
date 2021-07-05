@@ -59,20 +59,6 @@ class SideBar extends StatelessWidget {
               ),
               TextButton.icon(
                 icon: Icon(
-                  Icons.person,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {},
-                label: Text(
-                  "My Profile",
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              TextButton.icon(
-                icon: Icon(
                   Icons.settings,
                   color: Theme.of(context).primaryColor,
                 ),

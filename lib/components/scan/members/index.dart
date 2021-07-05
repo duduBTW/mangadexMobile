@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 
 import 'item.dart';
 
 class MembersScan extends StatelessWidget {
+  final ScanlationGroupDataModel scan;
+
+  const MembersScan({Key? key, required this.scan}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,25 +22,30 @@ class MembersScan extends StatelessWidget {
           SizedBox(
             height: 30,
           ),
-          MemberScan("Chronolla",
+          MemberScan(scan.attributes.leader['attributes']['username'],
               "https://i.ytimg.com/vi/g_xWmKCYZ-w/maxresdefault.jpg", true),
           SizedBox(
             height: 30,
           ),
-          Text(
-            "Members",
-            style: Theme.of(context).textTheme.headline3,
-          ),
+          if (scan.attributes.members != null)
+            Text(
+              "Members",
+              style: Theme.of(context).textTheme.headline3,
+            ),
           SizedBox(
             height: 30,
           ),
-          MemberScan("Chronolla",
-              "https://i.ytimg.com/vi/g_xWmKCYZ-w/maxresdefault.jpg"),
-          SizedBox(
-            height: 30,
-          ),
-          MemberScan("DuduBTW",
-              "https://pbs.twimg.com/profile_images/1381972907375480833/JoCT-Skd_400x400.jpg"),
+          if (scan.attributes.members != null)
+            ListView.separated(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (ctx, i) => MemberScan(
+                    scan.attributes.members[i]['attributes']['username'],
+                    "https://i.ytimg.com/vi/g_xWmKCYZ-w/maxresdefault.jpg"),
+                separatorBuilder: (ctx, i) => SizedBox(
+                      height: 30,
+                    ),
+                itemCount: scan.attributes.members.length),
           SizedBox(
             height: 30,
           ),

@@ -4,9 +4,13 @@ import 'package:mangadex/components/shared/actions/button.dart';
 import 'package:mangadex/components/shared/background/index.dart';
 import 'package:mangadex/components/shared/haeder/index.dart';
 import 'package:mangadex/components/shared/info/index.dart';
+import 'package:mangadex/service/author/model/index.dart';
 
 class AuthorPage extends StatelessWidget {
-  const AuthorPage({Key? key}) : super(key: key);
+  static String routeName = "/author";
+
+  final AuthorModel author;
+  const AuthorPage({Key? key, required this.author}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class AuthorPage extends StatelessWidget {
                     image: DecorationImage(
                         fit: BoxFit.fitWidth,
                         alignment: Alignment(0, -1),
-                        image: NetworkImage(
+                        image: NetworkImage(author.data.attributes.imageUrl ??
                             "https://pbs.twimg.com/media/E0nea50VgAAB2d_?format=jpg&name=medium"))),
               ),
             ),
@@ -48,10 +52,11 @@ class AuthorPage extends StatelessWidget {
                 "A salary man is quite depressed, especially on Mondays. At his lowest point a well-endowed High-School girl calling herself Ai-chan stumbles breast-first into his face. The concussion she gave him served as the start of their relationship.\nA salary man is quite depressed, especially on Mondays. At his lowest point a well-endowed High-School girl calling herself Ai-chan stumbles breast-first into his face. The concussion she gave him served as the start of their relationship.",
                 style: Theme.of(context).textTheme.bodyText1,
               ),
-            ], "Author name"),
+            ], author.data.attributes.name),
             MangasAuthor()
           ],
         ),
-        "https://pbs.twimg.com/media/E0nea50VgAAB2d_?format=jpg&name=medium");
+        author.data.attributes.imageUrl ??
+            "https://pbs.twimg.com/media/E0nea50VgAAB2d_?format=jpg&name=medium");
   }
 }

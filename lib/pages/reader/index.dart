@@ -103,7 +103,7 @@ class _MangaReaderState extends State<MangaReader> {
       // onDoubleTap: onTapScreen,
       child: Scaffold(
         body: SafeArea(
-          child: readers[options.indexOf(selected!)],
+          child: readers[options.indexOf(selected)],
         ),
       ),
     );

@@ -7,6 +7,8 @@ import 'package:mangadex/service/chapters/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/manga/model/index.dart';
+import 'package:mangadex/service/scan/index.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 
 import 'index.dart';
 
@@ -15,6 +17,17 @@ class UserMangaController with ChangeNotifier {
   static final storage = new FlutterSecureStorage();
 
   UserMangaController(this.http);
+
+  // Chap Scans
+  Map<String, ScanlationGroupDataModel>? _userChaptersScans;
+  Map<String, ScanlationGroupDataModel>? get userChaptersScans =>
+      _userChaptersScans;
+  set userChaptersScans(
+      Map<String, ScanlationGroupDataModel>? userChaptersScans) {
+    _userChaptersScans = userChaptersScans;
+    notifyListeners();
+  }
+  // - // - // - // - //
 
   List<MangaModel>? _recentMangas;
 
@@ -141,24 +154,75 @@ class UserMangaController with ChangeNotifier {
           .toList();
 
       ids = ids.toSet().toList();
+      updateMangaChapters(ids);
 
-      var mangas = await MangaControllerHelper.getMangasData(http,
-          identificatiors: ids,
-          limit: ids.length.toString(),
-          considerContentRating: false);
+      List<String> idsScan = [];
+      for (var chapter in result.item1) {
+        var ids = chapter.relationships
+            .where((element) => element!['type'] == "scanlation_group");
 
-      Map<String, MangaModel> userManTemp = {};
-      for (var i = 0; i < mangas.item1.length; i++) {
-        userManTemp["${mangas.item1[i].data.id}"] = mangas.item1[i];
+        idsScan = [...idsScan, ...ids.map((id) => id!['id']).toList()];
       }
-      _userChaptersMangas = _userChaptersMangas != null
-          ? {..._userChaptersMangas!, ...userManTemp}
-          : userManTemp;
-      notifyListeners();
+      updateMangaGroups(idsScan);
+      // String? id = result.item1[9].relationships.where(
+      //     (element) => element?['type'] == "scanlation_group")?['id'];
+
+      // if (id != null) {
+      //   idsScan = [...idsScan, id];
+      // }
+
+      // var teste = idsScan;
+
+      // var idsScan = result.item1.map((chapter) => chapter.relationships
+      // .singleWhere(
+      //     (element) => element?['type'] == "scanlation_group")!['id']
+      //     .toString());
+
+      // var teste = idsScan.toList();
+
+      // var idsScan = result.item1
+      //     .map((chapter) => chapter.relationships
+      //         .singleWhere(
+      //             (element) => element?['type'] == "scanlation_group")!['id']
+      //         .toString())
+      //     .toList();
+
+      // idsScan = idsScan.toSet().toList();
+      // updateMangaGroups(idsScan);
     } catch (error) {
       _chapterPageController.error = error;
       throw error;
     }
+  }
+
+  void updateMangaGroups(List<String> ids) async {
+    var scans =
+        await ScanlationGroupDataControllerHelper.getScans(http, ids: ids);
+
+    Map<String, ScanlationGroupDataModel> _userChaptersScansTemp = {};
+    for (var i = 0; i < scans.length; i++) {
+      _userChaptersScansTemp["${scans[i].id}"] = scans[i];
+    }
+    _userChaptersScans = _userChaptersScans != null
+        ? {..._userChaptersScans!, ..._userChaptersScansTemp}
+        : _userChaptersScansTemp;
+    notifyListeners();
+  }
+
+  void updateMangaChapters(List<String> ids) async {
+    var mangas = await MangaControllerHelper.getMangasData(http,
+        identificatiors: ids,
+        limit: ids.length.toString(),
+        considerContentRating: false);
+
+    Map<String, MangaModel> userManTemp = {};
+    for (var i = 0; i < mangas.item1.length; i++) {
+      userManTemp["${mangas.item1[i].data.id}"] = mangas.item1[i];
+    }
+    _userChaptersMangas = _userChaptersMangas != null
+        ? {..._userChaptersMangas!, ...userManTemp}
+        : userManTemp;
+    notifyListeners();
   }
   /////////
 }

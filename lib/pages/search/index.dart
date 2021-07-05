@@ -2,17 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:mangadex/components/scan/members/item.dart';
 import 'package:mangadex/components/shared/manga/index.dart';
 import 'package:mangadex/components/shared/manga/item.dart';
+import 'package:mangadex/pages/author/index.dart';
 import 'package:mangadex/service/manga/search.dart';
 import 'package:provider/provider.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
+  @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabChange);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
+  void _handleTabChange() {
+    if (_tabController.index == 1) {
+      var searchProvider =
+          Provider.of<SearchController>(context, listen: false);
+      searchProvider.getAuthors();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 2,
       child: Scaffold(
         // body: MangaSearch(),
         appBar: TabBar(
+          controller: _tabController,
           tabs: [
             Tab(
               text: "Manga",
@@ -20,20 +52,21 @@ class SearchPage extends StatelessWidget {
             Tab(
               text: "Author",
             ),
-            Tab(
-              text: "Users",
-            ),
-            Tab(
-              text: "Scans",
-            ),
+            // Tab(
+            //   text: "Users",
+            // ),
+            // Tab(
+            //   text: "Scans",
+            // ),
           ],
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             MangaSearch(),
             AuthorSearch(),
-            ScanSearch(),
-            ScanSearch(),
+            // ScanSearch(),
+            // ScanSearch(),
           ],
         ),
       ),
@@ -46,12 +79,27 @@ class AuthorSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var authors = Provider.of<SearchController>(context).authors;
+
+    if (authors == null) return Center(child: CircularProgressIndicator());
+
     return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (ctx, index) => Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(30),
-              child: Text("Author $index"),
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
+        itemCount: authors.length,
+        itemBuilder: (ctx, index) => ListTile(
+              onTap: () => Navigator.of(context)
+                  .pushNamed(AuthorPage.routeName, arguments: authors[index]),
+              leading: authors[index].data.attributes.imageUrl != null
+                  ? Image.network(
+                      "${authors[index].data.attributes.imageUrl}",
+                      width: 20,
+                    )
+                  : Container(
+                      width: 0,
+                      // color: Colors.lightBlue,
+                    ),
+              title: Text("${authors[index].data.attributes.name}"),
             ));
   }
 }

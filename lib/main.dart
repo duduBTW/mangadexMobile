@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/pages/author/index.dart';
 import 'package:mangadex/pages/configuration/count/index.dart';
 import 'package:mangadex/pages/configuration/index.dart';
 import 'package:mangadex/pages/home/index.dart';
 import 'package:mangadex/pages/manga/index.dart';
 import 'package:mangadex/pages/mangaList/index.dart';
 import 'package:mangadex/pages/reader/index.dart';
+import 'package:mangadex/pages/scan/index.dart';
 import 'package:mangadex/pages/search/filters/manga.dart';
+import 'package:mangadex/service/author/model/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/login/index.dart';
@@ -13,7 +16,9 @@ import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:mangadex/service/manga/search.dart';
 import 'package:mangadex/service/manga/user.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 import 'package:mangadex/service/theme.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -51,15 +56,9 @@ class MyApp extends StatelessWidget {
           '/configuration/count': (ctx) => ConfigurationCount(),
         },
         onGenerateRoute: (settings) {
-          // If you push the PassArguments route
           if (settings.name == MangaPage.routeName) {
-            // Cast the arguments to the correct
-            // type: ScreenArguments.
             final manga = settings.arguments as MangaModel;
 
-            // Then, extract the required data from
-            // the arguments and pass the data to the
-            // correct screen.
             return MaterialPageRoute(
               builder: (context) {
                 return MangaPage(
@@ -70,19 +69,36 @@ class MyApp extends StatelessWidget {
           }
 
           if (settings.name == MangaReaderPage.routeName) {
-            // Cast the arguments to the correct
-            // type: ScreenArguments.
             final chapter = settings.arguments as ChapterModel;
 
-            // Then, extract the required data from
-            // the arguments and pass the data to the
-            // correct screen.
             return MaterialPageRoute(
               builder: (context) {
                 return MangaReaderPage(
                   chapter: chapter,
                 );
               },
+            );
+          }
+
+          if (settings.name == AuthorPage.routeName) {
+            final author = settings.arguments as AuthorModel;
+
+            return PageTransition(
+              child: AuthorPage(author: author),
+              type: PageTransitionType.bottomToTop,
+              settings: settings,
+            );
+          }
+
+          if (settings.name == ScanPage.routeName) {
+            final scan = settings.arguments as ScanlationGroupDataModel;
+
+            return PageTransition(
+              child: ScanPage(
+                scan: scan,
+              ),
+              type: PageTransitionType.bottomToTop,
+              settings: settings,
             );
           }
           assert(false, 'Need to implement ${settings.name}');

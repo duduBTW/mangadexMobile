@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mangadex/pages/reader/standard/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
@@ -51,6 +52,7 @@ class _LongStripReaderState extends State<LongStripReader> {
 
   @override
   Widget build(BuildContext context) {
+    var zoom = Provider.of<MangaItemController>(context).zoom;
     var title = Provider.of<MangaItemController>(context)
             .manga
             ?.data
@@ -62,34 +64,37 @@ class _LongStripReaderState extends State<LongStripReader> {
       children: [
         GestureDetector(
           onDoubleTap: onTapScreen,
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              itemCount: widget.chapter.data.attributes.data.length,
-              itemBuilder: (ctx, i) => VisibilityDetector(
-                key: Key(i.toString()),
-                onVisibilityChanged: (v) => onVisibilityChanged(v, i),
-                child: CachedNetworkImage(
-                  key: UniqueKey(),
-                  imageUrl: widget.chapter.data.attributes.data[i] != null
-                      ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
-                      : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
-                  width: MediaQuery.of(context).size.width,
-                  progressIndicatorBuilder: (ctx, url, loadingProgress) {
-                    // if (loadingProgress == null) return child;
+          child: InteractiveViewer(
+            scaleEnabled: zoom,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                itemCount: widget.chapter.data.attributes.data.length,
+                itemBuilder: (ctx, i) => VisibilityDetector(
+                  key: Key(i.toString()),
+                  onVisibilityChanged: (v) => onVisibilityChanged(v, i),
+                  child: CachedNetworkImage(
+                    key: UniqueKey(),
+                    imageUrl: widget.chapter.data.attributes.data[i] != null
+                        ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
+                        : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
+                    width: MediaQuery.of(context).size.width,
+                    progressIndicatorBuilder: (ctx, url, loadingProgress) {
+                      // if (loadingProgress == null) return child;
 
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.75,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).primaryColor,
-                          value: loadingProgress.progress,
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.75,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                            value: loadingProgress.progress,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

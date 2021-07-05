@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangadex/pages/reader/index.dart';
+import 'package:mangadex/pages/scan/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -170,15 +172,19 @@ class ChapManga extends StatelessWidget {
 }
 
 class ChapItem extends StatelessWidget {
-  final ChapterModel charItem;
   final MangaModel? manga;
+  final ScanlationGroupDataModel? scan;
+
+  final ChapterModel charItem;
   final double paddingBottom;
+
   const ChapItem({
     Key? key,
     required this.popOnOpen,
     required this.charItem,
     this.manga,
     this.paddingBottom = 30,
+    this.scan,
   }) : super(key: key);
 
   final bool popOnOpen;
@@ -224,31 +230,40 @@ class ChapItem extends StatelessWidget {
             //   "https://flagcdn.com/16x12/${charItem.attributes.translatedLanguage!.split("-")[0]}.png",
             //   width: 20,
             // ),
+
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: Text(
-                        charItem.data.attributes.title == null ||
-                                charItem.data.attributes.title == ""
-                            ? charItem.data.attributes.chapter ?? ""
-                            : charItem.data.attributes.title ?? "",
-                        style: GoogleFonts.rubik(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                        overflow: TextOverflow.ellipsis,
+              child: GestureDetector(
+                onTap: scan != null
+                    ? () => Navigator.of(context)
+                        .pushNamed(ScanPage.routeName, arguments: scan)
+                    : null,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Text(
+                          charItem.data.attributes.title == null ||
+                                  charItem.data.attributes.title == ""
+                              ? charItem.data.attributes.chapter ?? ""
+                              : charItem.data.attributes.title ?? "",
+                          style: GoogleFonts.rubik(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "Scan Grup Name",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        scan?.attributes != null
+                            ? scan!.attributes.name
+                            : "...",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

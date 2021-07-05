@@ -19,13 +19,9 @@ class _MangaReaderConfigurationState extends State<MangaReaderConfiguration> {
 
   List<String> options = MangaReaderConfiguration.options;
   List<Widget> optionsContent = [
+    Container(),
     StandardMangaConfigs(),
-    Column(
-      children: [Text("b")],
-    ),
-    Column(
-      children: [Text("c")],
-    ),
+    Container(),
   ];
 
   // String selected = "Standard";
@@ -43,9 +39,16 @@ class _MangaReaderConfigurationState extends State<MangaReaderConfiguration> {
     storage.write(key: 'DEF_READ_TYPE', value: newValue);
   }
 
+  void setZoom(bool newValue) {
+    storage.write(key: 'DEF_READ_ZOOM', value: newValue ? "1" : "0");
+
+    Provider.of<MangaItemController>(context, listen: false).zoom = newValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     var selected = Provider.of<MangaItemController>(context).selected;
+    var zoom = Provider.of<MangaItemController>(context).zoom;
     if (selected == null)
       return Center(
         child: CircularProgressIndicator(),
@@ -80,7 +83,26 @@ class _MangaReaderConfigurationState extends State<MangaReaderConfiguration> {
             SizedBox(
               height: 15,
             ),
-            optionsContent[options.indexOf(selected)]
+            optionsContent[options.indexOf(selected)],
+            SizedBox(
+              height: 15,
+            ),
+            ListTile(
+              title: Text("Zoom"),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                    "Enable zoom in and zoom out in a page  while reading"),
+              ),
+              trailing: Switch(
+                value: zoom,
+                onChanged: setZoom,
+                activeColor: Theme.of(context).primaryColor,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
           ],
         ),
       ),
@@ -98,16 +120,15 @@ class StandardMangaConfigs extends StatefulWidget {
 }
 
 class _StandardMangaConfigsState extends State<StandardMangaConfigs> {
-  bool zoom = true;
-
-  void setZoom(bool newValue) {
-    setState(() {
-      zoom = newValue;
-    });
+  // Direction
+  void onDireactionChange(ReagingDirection? newValue) {
+    if (newValue != null)
+      Provider.of<MangaItemController>(context, listen: false).direction =
+          newValue;
   }
 
   void showDirectionModal() {
-    showBottomSheet(
+    showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
         builder: (context) => Container(
@@ -123,56 +144,23 @@ class _StandardMangaConfigsState extends State<StandardMangaConfigs> {
                   ListTile(
                     title: const Text('Left To Right'),
                     trailing: Icon(Icons.arrow_forward_rounded),
-                    leading: Radio(
-                      onChanged: (_) {},
-                      value: "",
-                      groupValue: [],
+                    leading: Radio<ReagingDirection>(
+                      activeColor: Colors.black,
+                      onChanged: onDireactionChange,
+                      value: ReagingDirection.leftToRight,
+                      groupValue:
+                          Provider.of<MangaItemController>(context).direction,
                     ),
                   ),
                   ListTile(
                     title: const Text('Right To Left'),
                     trailing: Icon(Icons.arrow_back_rounded),
-                    leading: Radio(
-                      onChanged: (_) {},
-                      value: "",
-                      groupValue: [],
-                    ),
-                  ),
-                ],
-              ),
-            ));
-  }
-
-  void showFitModal() {
-    showBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (context) => Container(
-              margin: EdgeInsets.all(30),
-              // height: 200,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.circular(30)),
-              width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('Width'),
-                    trailing: Icon(Icons.horizontal_rule_rounded),
-                    leading: Radio(
-                      onChanged: (_) {},
-                      value: "",
-                      groupValue: [],
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Height'),
-                    trailing: Icon(Icons.height),
-                    leading: Radio(
-                      onChanged: (_) {},
-                      value: "",
-                      groupValue: [],
+                    leading: Radio<ReagingDirection>(
+                      activeColor: Colors.black,
+                      onChanged: onDireactionChange,
+                      value: ReagingDirection.RightToLeft,
+                      groupValue:
+                          Provider.of<MangaItemController>(context).direction,
                     ),
                   ),
                 ],
@@ -186,31 +174,11 @@ class _StandardMangaConfigsState extends State<StandardMangaConfigs> {
       shrinkWrap: true,
       children: [
         ListTile(
-          title: Text("Zoom"),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Text("Enable zoom in and zoom out in a page  while reading"),
-          ),
-          trailing: Switch(
-            value: zoom,
-            onChanged: setZoom,
-            activeColor: Theme.of(context).primaryColor,
-          ),
-        ),
-        ListTile(
           title: Text("Direction"),
           onTap: showDirectionModal,
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Text("Page change direaction"),
-          ),
-        ),
-        ListTile(
-          title: Text("Fit"),
-          onTap: showFitModal,
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Text("Page fit"),
           ),
         ),
       ],
@@ -239,7 +207,7 @@ class SelectReaderTypeCard extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               border: selected
-                  ? Border.all(color: Theme.of(context).primaryColor)
+                  ? Border.all(color: Theme.of(context).primaryColor, width: 2)
                   : null),
           child: Text(
             label,

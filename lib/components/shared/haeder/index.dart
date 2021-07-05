@@ -20,23 +20,29 @@ class Header extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "Back",
-                      style: TextStyle(
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_back,
                           color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16),
-                    )
-                  ],
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          "Back",
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 60,

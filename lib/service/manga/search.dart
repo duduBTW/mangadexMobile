@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mangadex/service/author/index.dart';
+import 'package:mangadex/service/author/model/index.dart';
 import 'package:mangadex/service/http.dart';
 import 'package:mangadex/service/manga/index.dart';
 
@@ -15,7 +17,20 @@ extension Iterables<E> on Iterable<E> {
 class SearchController with ChangeNotifier {
   late final MangadexService http;
   String _title = "";
+  String get title => _title;
+  set title(String title) {
+    _title = title;
+    notifyListeners();
+
+    getMangas();
+  }
+
   bool _loading = false;
+  bool get loading => _loading;
+  set loading(bool loading) {
+    _loading = loading;
+    notifyListeners();
+  }
 
   Map<String, List<TagsModel>>? _tags;
   Map<String, List<TagsModel>>? get tags => _tags;
@@ -24,22 +39,22 @@ class SearchController with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get loading => _loading;
-
-  set loading(bool loading) {
-    _loading = loading;
+  // Author
+  bool _loadingAuthor = false;
+  bool get loadingAuthor => _loadingAuthor;
+  set loadingAuthor(bool loadingAuthor) {
+    _loadingAuthor = loadingAuthor;
     notifyListeners();
   }
 
-  String get title => _title;
-
-  set title(String title) {
-    _title = title;
+  List<AuthorModel>? _authors;
+  List<AuthorModel>? get authors => _authors;
+  set authors(List<AuthorModel>? authors) {
+    _authors = authors;
     notifyListeners();
-
-    getMangas();
   }
 
+  // // //
   SearchController(this.http);
 
   List<MangaModel>? _mangas;
@@ -51,6 +66,17 @@ class SearchController with ChangeNotifier {
 
     _mangas = res.item1;
     _loading = false;
+    notifyListeners();
+  }
+
+  void getAuthors() async {
+    loadingAuthor = true;
+    var res = await AuthorControllerHelper.getAuthors(http, title: title);
+
+    print(res);
+
+    _authors = res;
+    _loadingAuthor = false;
     notifyListeners();
   }
 
