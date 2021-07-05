@@ -49,7 +49,7 @@ class MembersScan extends StatelessWidget {
           SizedBox(
             height: 30,
           ),
-          SeeAllMemberScan()
+          // SeeAllMemberScan()
         ],
       ),
     );

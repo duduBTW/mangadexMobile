@@ -8,23 +8,19 @@ class RecentChapters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var chapters = Provider.of<MangaController>(context).recentChapters;
+    var scans = Provider.of<MangaController>(context).recentChaptersScans;
+    var chapters = Provider.of<MangaController>(context).chapterPageController;
     var mangas = Provider.of<MangaController>(context).recentChaptersMangas;
 
-    return chapters == null
-        ? Center(
-            child: SizedBox(
-            height: 22,
-            width: 22,
-            child: CircularProgressIndicator(),
-          ))
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ChapterList(
-              chapters: chapters,
-              shrinkWrap: true,
-              mangas: mangas,
-            ),
-          );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: FollowChaptersPaginated(
+        scans: scans,
+        height: MediaQuery.of(context).size.height * 0.5,
+        pagingController: chapters,
+        // chapters: chapters,
+        mangas: mangas,
+      ),
+    );
   }
 }

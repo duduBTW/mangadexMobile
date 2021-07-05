@@ -34,8 +34,13 @@ class FollowChaptersPaginated extends StatelessWidget {
   final PagingController<int, ChapterModel> pagingController;
   final Map<String, MangaModel>? mangas;
   final Map<String, ScanlationGroupDataModel>? scans;
+  final double? height;
   const FollowChaptersPaginated(
-      {Key? key, required this.pagingController, this.mangas, this.scans})
+      {Key? key,
+      required this.pagingController,
+      this.mangas,
+      this.scans,
+      this.height})
       : super(key: key);
 
   @override
@@ -49,7 +54,7 @@ class FollowChaptersPaginated extends StatelessWidget {
       ),
       // padding: const EdgeInsets.symmetric(vertical: 30),
       child: Container(
-        height: MediaQuery.of(context).size.height,
+        height: height != null ? height : MediaQuery.of(context).size.height,
         child: PagedListView(
           pagingController: pagingController,
           builderDelegate: PagedChildBuilderDelegate<ChapterModel>(
@@ -108,11 +113,14 @@ class ChapterList extends StatelessWidget {
   final List<ChapterModel> chapters;
   final bool shrinkWrap;
   final Map<String, MangaModel>? mangas;
+  final Map<String, ScanlationGroupDataModel>? scans;
+
   const ChapterList(
       {Key? key,
       required this.chapters,
       required this.mangas,
-      this.shrinkWrap = false})
+      this.shrinkWrap = false,
+      this.scans})
       : super(key: key);
 
   @override
@@ -125,6 +133,8 @@ class ChapterList extends StatelessWidget {
               parent: AlwaysScrollableScrollPhysics()),
       itemCount: chapters.length,
       itemBuilder: (ctx, i) {
+        var scanId = chapters[i].relationships.firstWhere(
+            (element) => element!['type'] == "scanlation_group")!['id'];
         var mangaId = chapters[i]
             .relationships
             .singleWhere((element) => element!['type'] == "manga")!['id'];
@@ -134,6 +144,7 @@ class ChapterList extends StatelessWidget {
             .singleWhere((element) => element!['type'] == "manga")!['id'];
 
         return MangaChapItem(
+          scan: scans?["$scanId"],
           manga: mangas?["$mangaId"],
           charItem: chapters[i],
           showChapLabel: i == 0 ||
@@ -232,6 +243,13 @@ class ChapterMangaHeader extends StatelessWidget {
                             width: 40,
                             height: 40,
                             fit: BoxFit.cover,
+                            errorBuilder: (ctx, obj, err) => SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Container(
+                                color: Colors.grey[200],
+                              ),
+                            ),
                           )
                         : Container(
                             width: 40,

@@ -89,21 +89,18 @@ class UserMangaController with ChangeNotifier {
       var mangas = result.item1;
 
       final previouslyFetchedItemsCount =
-          // 2
           _pagingController.itemList?.length ?? 0;
       final totalFetchedItemsCount =
           previouslyFetchedItemsCount + mangas.length;
       final isLastPage = totalFetchedItemsCount == pageResult.total;
 
       if (isLastPage) {
-        // 3
         _pagingController.appendLastPage(mangas);
       } else {
         final nextPageKey = pageKey + 1;
         _pagingController.appendPage(mangas, nextPageKey);
       }
     } catch (error) {
-      // 4
       _pagingController.error = error;
       throw error;
     }
@@ -164,31 +161,6 @@ class UserMangaController with ChangeNotifier {
         idsScan = [...idsScan, ...ids.map((id) => id!['id']).toList()];
       }
       updateMangaGroups(idsScan);
-      // String? id = result.item1[9].relationships.where(
-      //     (element) => element?['type'] == "scanlation_group")?['id'];
-
-      // if (id != null) {
-      //   idsScan = [...idsScan, id];
-      // }
-
-      // var teste = idsScan;
-
-      // var idsScan = result.item1.map((chapter) => chapter.relationships
-      // .singleWhere(
-      //     (element) => element?['type'] == "scanlation_group")!['id']
-      //     .toString());
-
-      // var teste = idsScan.toList();
-
-      // var idsScan = result.item1
-      //     .map((chapter) => chapter.relationships
-      //         .singleWhere(
-      //             (element) => element?['type'] == "scanlation_group")!['id']
-      //         .toString())
-      //     .toList();
-
-      // idsScan = idsScan.toSet().toList();
-      // updateMangaGroups(idsScan);
     } catch (error) {
       _chapterPageController.error = error;
       throw error;

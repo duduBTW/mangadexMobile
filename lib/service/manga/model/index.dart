@@ -4,7 +4,7 @@ part 'index.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class MangaModel {
-  final String result;
+  final String? result;
   final MangaDataModel data;
   final List<RelationshipsModel> relationships;
 

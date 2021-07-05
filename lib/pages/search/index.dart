@@ -30,11 +30,13 @@ class _SearchPageState extends State<SearchPage>
   }
 
   void _handleTabChange() {
-    if (_tabController.index == 1) {
-      var searchProvider =
-          Provider.of<SearchController>(context, listen: false);
-      searchProvider.getAuthors();
-    }
+    Provider.of<SearchController>(context, listen: false).currentPage =
+        PagesSearch.values[_tabController.index];
+    // if (_tabController.index == 1) {
+    //   var searchProvider =
+    //       Provider.of<SearchController>(context, listen: false);
+    //   searchProvider.getAuthors();
+    // }
   }
 
   @override
@@ -80,8 +82,39 @@ class AuthorSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var authors = Provider.of<SearchController>(context).authors;
+    var loadingAuthor = Provider.of<SearchController>(context).loadingAuthor;
 
-    if (authors == null) return Center(child: CircularProgressIndicator());
+    if (loadingAuthor) return Center(child: CircularProgressIndicator());
+
+    if (authors == null || authors.length <= 0)
+      return Expanded(
+        child: Column(
+          children: [
+            Spacer(),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -2,
+                  right: -2,
+                  child: Icon(Icons.person,
+                      size: 52,
+                      color: Theme.of(context).primaryColor.withOpacity(0.5)),
+                ),
+                Icon(Icons.person, size: 52, color: Colors.grey),
+              ],
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "Empty",
+              style: TextStyle(color: Colors.grey, fontSize: 22),
+            ),
+            Spacer(),
+          ],
+        ),
+      );
 
     return ListView.builder(
         physics: const BouncingScrollPhysics(
@@ -93,11 +126,11 @@ class AuthorSearch extends StatelessWidget {
               leading: authors[index].data.attributes.imageUrl != null
                   ? Image.network(
                       "${authors[index].data.attributes.imageUrl}",
-                      width: 20,
+                      width: 32,
                     )
-                  : Container(
-                      width: 0,
-                      // color: Colors.lightBlue,
+                  : Image.asset(
+                      "assets/noPfp.png",
+                      width: 32,
                     ),
               title: Text("${authors[index].data.attributes.name}"),
             ));
@@ -130,6 +163,9 @@ class MangaSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     var mangas = Provider.of<SearchController>(context).mangas;
     var loading = Provider.of<SearchController>(context).loading;
+    var total = Provider.of<SearchController>(context).excludedTags.length +
+        Provider.of<SearchController>(context).includedTags.length;
+
     return Column(
       children: [
         Container(
@@ -144,7 +180,7 @@ class MangaSearch extends StatelessWidget {
                 },
                 icon: Icon(Icons.filter_list),
                 label: Text(
-                  "Filters",
+                  "Filters ($total)",
                   style: TextStyle(color: Colors.black),
                 ),
                 style: ButtonStyle(

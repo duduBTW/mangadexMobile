@@ -6,7 +6,7 @@ import 'package:mangadex/components/shared/chapters/index.dart';
 
 class BackgroundContainer extends StatefulWidget {
   final Widget content;
-  final String backgroundImage;
+  final String? backgroundImage;
 
   const BackgroundContainer(this.content, this.backgroundImage);
 

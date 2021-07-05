@@ -23,7 +23,6 @@ class ConfigurationFilters extends StatelessWidget {
         children: [
           ...tags
               .map((tag) => TagFilterItem(
-                    selected: false,
                     tagTitle: tag,
                   ))
               .toList()

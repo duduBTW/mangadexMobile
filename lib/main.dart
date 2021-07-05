@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
         home: HomePage(http),
         routes: {
           '/manga/list': (ctx) => MangaList(),
-          '/search/filters/manga': (ctx) => MangaFilters(),
           '/configuration': (ctx) => ConfigurationPage(),
           '/configuration/count': (ctx) => ConfigurationCount(),
         },
@@ -86,6 +85,14 @@ class MyApp extends StatelessWidget {
             return PageTransition(
               child: AuthorPage(author: author),
               type: PageTransitionType.bottomToTop,
+              settings: settings,
+            );
+          }
+
+          if (settings.name == '/search/filters/manga') {
+            return PageTransition(
+              child: MangaFilters(),
+              type: PageTransitionType.leftToRight,
               settings: settings,
             );
           }

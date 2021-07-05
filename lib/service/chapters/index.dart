@@ -87,9 +87,10 @@ class ChaptersControllerHelper {
     // return chaps;
   }
 
-  static Future<List<ChapterModel>> getGeneralLatestChapter(
-      MangadexService http) async {
-    String url = "/chapter?limit=20&order[publishAt]=desc";
+  static Future<Tuple<List<ChapterModel>, PaginationModel>>
+      getGeneralLatestChapter(MangadexService http,
+          {int limit = 30, int offset = 0}) async {
+    String url = "/chapter?limit=$limit&offset=$offset&order[publishAt]=desc";
 
     url = await getTranslatedLanguageUrl(url);
     var response = await http.get(url);
@@ -100,7 +101,13 @@ class ChaptersControllerHelper {
       chaps.add(ChapterModel.fromJson(coverItemApi));
     }
 
-    return chaps;
+    return Tuple<List<ChapterModel>, PaginationModel>(
+        item1: chaps,
+        item2: PaginationModel(
+          limit: response.data['limit'],
+          offset: response.data['offset'],
+          total: response.data['total'],
+        ));
   }
 
   static Future<String> getServer(MangadexService http, String idChar) async {

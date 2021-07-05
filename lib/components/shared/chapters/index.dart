@@ -9,24 +9,12 @@ import 'package:mangadex/service/scan/model/index.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class Chapters extends StatefulWidget {
+class Chapters extends StatelessWidget {
   final ScrollController controller;
   const Chapters({Key? key, required this.controller}) : super(key: key);
 
   @override
-  _ChaptersState createState() => _ChaptersState();
-}
-
-class _ChaptersState extends State<Chapters> {
-  @override
-  void initState() {
-    super.initState();
-    // Provider.of<MangaItemController>(context, listen: false).getChapters();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final controller = widget.controller;
     var chaptersList = Provider.of<MangaItemController>(context).chaptersList;
     print(chaptersList);
 

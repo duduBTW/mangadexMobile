@@ -39,8 +39,9 @@ class AuthorPage extends StatelessWidget {
                     image: DecorationImage(
                         fit: BoxFit.fitWidth,
                         alignment: Alignment(0, -1),
-                        image: NetworkImage(author.data.attributes.imageUrl ??
-                            "https://pbs.twimg.com/media/E0nea50VgAAB2d_?format=jpg&name=medium"))),
+                        image: author.data.attributes.imageUrl != null
+                            ? NetworkImage(author.data.attributes.imageUrl!)
+                            : AssetImage("assets/noPfp.png") as ImageProvider)),
               ),
             ),
             Info([
@@ -56,7 +57,6 @@ class AuthorPage extends StatelessWidget {
             MangasAuthor()
           ],
         ),
-        author.data.attributes.imageUrl ??
-            "https://pbs.twimg.com/media/E0nea50VgAAB2d_?format=jpg&name=medium");
+        author.data.attributes.imageUrl);
   }
 }

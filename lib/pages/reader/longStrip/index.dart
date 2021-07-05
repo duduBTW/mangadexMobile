@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:mangadex/pages/reader/standard/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/manga/item.dart';
@@ -18,6 +19,10 @@ class LongStripReader extends StatefulWidget {
 
 class _LongStripReaderState extends State<LongStripReader> {
   // get currentPage => 1;
+  // static final customCache = CacheManager(Config(
+  //   '',
+
+  // ));
   int currentPage = 0;
 
   bool open = false;
@@ -76,13 +81,23 @@ class _LongStripReaderState extends State<LongStripReader> {
                   key: Key(i.toString()),
                   onVisibilityChanged: (v) => onVisibilityChanged(v, i),
                   child: CachedNetworkImage(
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                                Colors.red, BlendMode.colorBurn)),
+                      ),
+                    ),
                     key: UniqueKey(),
                     imageUrl: widget.chapter.data.attributes.data[i] != null
                         ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
                         : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
                     width: MediaQuery.of(context).size.width,
                     progressIndicatorBuilder: (ctx, url, loadingProgress) {
-                      // if (loadingProgress == null) return child;
+                      if (loadingProgress.totalSize ==
+                          loadingProgress.downloaded) print(i);
 
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.75,

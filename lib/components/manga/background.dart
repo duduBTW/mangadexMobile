@@ -23,7 +23,7 @@ class BackgroundManga extends StatelessWidget {
 
 class BackgroundImageManga extends StatelessWidget {
   final double radius = 30;
-  final String imageLink;
+  final String? imageLink;
 
   BackgroundImageManga(this.imageLink);
 
@@ -37,7 +37,9 @@ class BackgroundImageManga extends StatelessWidget {
           image: DecorationImage(
               fit: BoxFit.fitWidth,
               alignment: Alignment(0, -1),
-              image: NetworkImage(imageLink)),
+              image: imageLink != null
+                  ? NetworkImage(imageLink!)
+                  : AssetImage("assets/noPfp.png") as ImageProvider),
         ),
       ),
     );

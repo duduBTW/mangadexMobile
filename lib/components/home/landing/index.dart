@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mangadex/components/home/landing/recentlyAdded/chapters.dart';
 import 'package:mangadex/components/home/landing/recentlyAdded/index.dart';
-import 'package:mangadex/components/home/search/index.dart';
 import 'package:mangadex/pages/search/index.dart';
 import 'package:mangadex/service/manga/index.dart';
 import 'package:mangadex/service/manga/search.dart';
@@ -25,7 +24,7 @@ class _LandingState extends State<Landing> {
 
   void loadStuff() {
     Provider.of<MangaController>(context, listen: false).getRecentMangas();
-    Provider.of<MangaController>(context, listen: false).fetchRecentChapters();
+    Provider.of<MangaController>(context, listen: false).initRecentCahpters();
   }
 
   @override
@@ -33,40 +32,35 @@ class _LandingState extends State<Landing> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        RefreshIndicator(
-            color: Theme.of(context).primaryColor,
-            onRefresh: () => Future.sync(
-                  () => loadStuff(),
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 110,
                 ),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 110,
-                    ),
-                    RecentlyAdded(),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        "Last Updated",
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    RecentChapters(),
-                  ],
+                RecentlyAdded(),
+                SizedBox(
+                  height: 30,
                 ),
-              ),
-            )),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Last Updated",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                RecentChapters(),
+              ],
+            ),
+          ),
+        ),
         buildFloatingSearchBar()
       ],
     );
