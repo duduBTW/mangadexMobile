@@ -5,6 +5,7 @@ import 'package:mangadex/service/chapters/model/chapter/index.dart';
 import 'package:mangadex/service/cover/index.dart';
 import 'package:mangadex/service/cover/model/index.dart';
 import 'package:mangadex/service/manga/index.dart';
+import 'package:mangadex/service/scan/model/index.dart';
 
 import '../http.dart';
 import 'model/index.dart';
@@ -104,6 +105,23 @@ class MangaItemController with ChangeNotifier {
     notifyListeners();
   }
 
+  Map<String, ScanlationGroupDataModel>? _chaptersScans;
+  Map<String, ScanlationGroupDataModel>? get chaptersScans => _chaptersScans;
+
+  void updateChapScans(List<ChapterModel> data) async {
+    var idsScan =
+        MangaControllerHelper.findRelationship("scanlation_group", data);
+
+    var chaptersScansTemp =
+        await MangaControllerHelper.getMangaGroups(http, idsScan);
+
+    _chaptersScans = _chaptersScans != null
+        ? {..._chaptersScans!, ...chaptersScansTemp}
+        : chaptersScansTemp;
+
+    notifyListeners();
+  }
+
   String chapterReadingNow = "";
   String next = "";
   String before = "";
@@ -176,23 +194,26 @@ class MangaItemController with ChangeNotifier {
   }
 
   void getChapter(String id) async {
-    _chapter[id] =
+    var chaptersTemp =
         await ChaptersControllerHelper.getChapter(http, _manga!.data.id, id);
+    _chapter[id] = chaptersTemp;
+
     notifyListeners();
+    updateChapScans(chaptersTemp);
   }
 
   void getNextChapter() async {
     print(_chaptersList.indexOf(chapterReadingNow));
     var index = _chaptersList.indexOf(chapterReadingNow);
-    var beforeCalc = _chaptersList[index + 1];
+    // var beforeCalc = _chaptersList[index + 1];
     var nextCalc = _chaptersList[index - 1];
 
     next = nextCalc;
-    before = beforeCalc;
+    // before = beforeCalc;
 
     notifyListeners();
     getChapter(nextCalc);
-    getChapter(beforeCalc);
+    // getChapter(beforeCalc);
   }
 
   void updateServer(String idChap) async {

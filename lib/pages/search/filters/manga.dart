@@ -168,13 +168,13 @@ class IncludedTags extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                if (tags.length >= 0)
+                if (tags.length > 0)
                   Text(
                     "Tap to delete",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.caption,
                   ),
-                if (tags.length >= 0)
+                if (tags.length > 0)
                   SizedBox(
                     height: 15,
                   ),
@@ -248,13 +248,13 @@ class ExcludedTags extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                if (tags.length >= 0)
+                if (tags.length > 0)
                   Text(
                     "Tap to delete",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.caption,
                   ),
-                if (tags.length >= 0)
+                if (tags.length > 0)
                   SizedBox(
                     height: 15,
                   ),

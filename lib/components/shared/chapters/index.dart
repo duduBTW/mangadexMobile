@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mangadex/pages/reader/index.dart';
 import 'package:mangadex/pages/scan/index.dart';
 import 'package:mangadex/service/chapters/model/chapter/index.dart';
+import 'package:mangadex/service/manga/index.dart';
 import 'package:mangadex/service/manga/item.dart';
 import 'package:mangadex/service/manga/model/index.dart';
 import 'package:mangadex/service/scan/model/index.dart';
@@ -106,6 +107,7 @@ class ChapManga extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var charItems = Provider.of<MangaItemController>(context).chapter[label];
+    var scans = Provider.of<MangaItemController>(context).chaptersScans;
     return Container(
       margin: EdgeInsets.only(top: 15),
       padding: EdgeInsets.symmetric(
@@ -141,12 +143,16 @@ class ChapManga extends StatelessWidget {
                 height: 15,
               ),
               if (charItems != null)
-                ...charItems
-                    .map((charItem) => ChapItem(
-                          popOnOpen: popOnOpen,
-                          charItem: charItem,
-                        ))
-                    .toList()
+                ...charItems.map((charItem) {
+                  var scanId = MangaControllerHelper.findRelationship(
+                      "scanlation_group", [charItem])[0];
+
+                  return ChapItem(
+                    scan: scans?[scanId],
+                    popOnOpen: popOnOpen,
+                    charItem: charItem,
+                  );
+                }).toList()
               else
                 LinearProgressIndicator(
                   minHeight: 2,

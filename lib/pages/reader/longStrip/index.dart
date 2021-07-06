@@ -36,7 +36,7 @@ class _LongStripReaderState extends State<LongStripReader> {
   @override
   void initState() {
     super.initState();
-    Provider.of<MangaItemController>(context, listen: false).getNextChapter();
+    // Provider.of<MangaItemController>(context, listen: false).getNextChapter();
   }
 
   void onVisibilityChanged(VisibilityInfo visibilityInfo, int i) {
@@ -48,11 +48,11 @@ class _LongStripReaderState extends State<LongStripReader> {
     if (visiblePercentage == 100 && currentPage != i) {
       //the magic is done here
       //
-      setState(() {
-        currentPage = i;
-      });
+      // setState(() {
+      //   currentPage = i;
+      // });
     }
-    debugPrint('Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
+    // debugPrint('Widget ${visibilityInfo.key} is ${visiblePercentage}% visible');
   }
 
   @override
@@ -72,6 +72,7 @@ class _LongStripReaderState extends State<LongStripReader> {
           child: InteractiveViewer(
             scaleEnabled: zoom,
             child: Container(
+              // width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(
@@ -81,20 +82,11 @@ class _LongStripReaderState extends State<LongStripReader> {
                   key: Key(i.toString()),
                   onVisibilityChanged: (v) => onVisibilityChanged(v, i),
                   child: CachedNetworkImage(
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                                Colors.red, BlendMode.colorBurn)),
-                      ),
-                    ),
+                    width: MediaQuery.of(context).size.width,
                     key: UniqueKey(),
                     imageUrl: widget.chapter.data.attributes.data[i] != null
                         ? "${Provider.of<MangaItemController>(context).serverUrl}/data/${widget.chapter.data.attributes.hash}/${widget.chapter.data.attributes.data[i]}"
                         : "https://images-cdn.9gag.com/photo/awAzB6D_700b.jpg",
-                    width: MediaQuery.of(context).size.width,
                     progressIndicatorBuilder: (ctx, url, loadingProgress) {
                       if (loadingProgress.totalSize ==
                           loadingProgress.downloaded) print(i);
